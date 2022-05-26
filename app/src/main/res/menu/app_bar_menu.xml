@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_favorite"
+        android:id="@+id/action_refresh"
         android:orderInCategory="300"
         android:title="User"
         android:icon="@drawable/ic_baseline_refresh_24"

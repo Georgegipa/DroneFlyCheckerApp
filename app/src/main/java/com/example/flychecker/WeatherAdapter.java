@@ -1,5 +1,6 @@
 package com.example.flychecker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,12 +67,14 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
             cloudcoverTv = (TextView) view.findViewById(R.id.tv_cloudcover);
             tempTv = (TextView) view.findViewById(R.id.tv_temperature);
         }
+        @SuppressLint("SetTextI18n")
         public void bind(final Weather weather) {
-            timeTv.setText(weather.getTime());
-            windTv.setText(String.valueOf(weather.getWindspeed_10m()));
-            percipTv.setText(String.valueOf(weather.getPrecipitation()));
-            cloudcoverTv.setText(String.valueOf(weather.getCloudcover()));
-            tempTv.setText(String.valueOf(weather.getTemperature_2m()));
+
+            timeTv.setText("Time:"+weather.getTime());
+            windTv.setText("Wind Speed: "+weather.getWindspeed_10m()+"m/s");
+            percipTv.setText("Precipitation: "+weather.getPrecipitation()+"mm");
+            cloudcoverTv.setText("CloudCoverage:"+weather.getCloudcover()+"%");
+            tempTv.setText("Temperature:"+weather.getTemperature_2m()+"°C");
         }
     }
 }

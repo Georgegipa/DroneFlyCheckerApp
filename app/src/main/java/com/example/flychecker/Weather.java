@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 public class Weather implements Parcelable {
     private float temperature_2m;
-    private int precipitation;
-    private int cloudcover;
+    private float precipitation;
+    private float cloudcover;
 //    private float winddirection_10m;
 //    private float windgusts_10m;
     private float windspeed_10m;
@@ -20,8 +20,8 @@ public class Weather implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(this.temperature_2m);
-        dest.writeInt(this.precipitation);
-        dest.writeInt(this.cloudcover);
+        dest.writeFloat(this.precipitation);
+        dest.writeFloat(this.cloudcover);
 //        dest.writeFloat(this.winddirection_10m);
 //        dest.writeFloat(this.windgusts_10m);
         dest.writeFloat(this.windspeed_10m);
@@ -32,8 +32,6 @@ public class Weather implements Parcelable {
         this.temperature_2m = source.readFloat();
         this.precipitation = source.readInt();
         this.cloudcover = source.readInt();
-//        this.winddirection_10m = source.readFloat();
-//        this.windgusts_10m = source.readFloat();
         this.windspeed_10m = source.readFloat();
         this.time = source.readString();
     }
@@ -43,10 +41,8 @@ public class Weather implements Parcelable {
 
     protected Weather(Parcel in) {
         this.temperature_2m = in.readFloat();
-        this.precipitation = in.readInt();
-        this.cloudcover = in.readInt();
-//        this.winddirection_10m = in.readFloat();
-//        this.windgusts_10m = in.readFloat();
+        this.precipitation = in.readFloat();
+        this.cloudcover = in.readFloat();
         this.windspeed_10m = in.readFloat();
         this.time = in.readString();
     }
@@ -72,37 +68,21 @@ public class Weather implements Parcelable {
         this.temperature_2m = temperature_2m;
     }
 
-    public int getPrecipitation() {
+    public float getPrecipitation() {
         return precipitation;
     }
 
-    public void setPrecipitation(int precipitation) {
+    public void setPrecipitation(float precipitation) {
         this.precipitation = precipitation;
     }
 
-    public int getCloudcover() {
+    public float getCloudcover() {
         return cloudcover;
     }
 
-    public void setCloudcover(int cloudcover) {
+    public void setCloudcover(float cloudcover) {
         this.cloudcover = cloudcover;
     }
-
-//    public float getWinddirection_10m() {
-//        return winddirection_10m;
-//    }
-//
-//    public void setWinddirection_10m(float winddirection_10m) {
-//        this.winddirection_10m = winddirection_10m;
-//    }
-//
-//    public float getWindgusts_10m() {
-//        return windgusts_10m;
-//    }
-//
-//    public void setWindgusts_10m(float windgusts_10m) {
-//        this.windgusts_10m = windgusts_10m;
-//    }
 
     public float getWindspeed_10m() {
         return windspeed_10m;
