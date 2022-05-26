@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Time:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_windinfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Wind info:"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintEnd_toEndOf="@+id/tv_time"
+        app:layout_constraintStart_toStartOf="@+id/tv_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_time" />
+
+    <TextView
+        android:id="@+id/tv_persipitation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Persipitation:"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintEnd_toEndOf="@+id/tv_windinfo"
+        app:layout_constraintStart_toStartOf="@+id/tv_windinfo"
+        app:layout_constraintTop_toBottomOf="@+id/tv_windinfo" />
+
+    <TextView
+        android:id="@+id/tv_cloudcover"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Cloudcover:"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintEnd_toEndOf="@+id/tv_persipitation"
+        app:layout_constraintStart_toStartOf="@+id/tv_persipitation"
+        app:layout_constraintTop_toBottomOf="@+id/tv_persipitation" />
+
+    <TextView
+        android:id="@+id/tv_temperature"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Temperature:"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintEnd_toEndOf="@+id/tv_cloudcover"
+        app:layout_constraintStart_toStartOf="@+id/tv_cloudcover"
+        app:layout_constraintTop_toBottomOf="@+id/tv_cloudcover" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
