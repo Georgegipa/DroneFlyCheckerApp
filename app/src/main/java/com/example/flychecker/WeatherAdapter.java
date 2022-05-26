@@ -4,58 +4,53 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class WeatherAdapter extends BaseAdapter {
+public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
+
     private Context mContext;
+    private LayoutInflater inflater;
     private List<Weather> mWeatherList;
 
-    // constructor
     public WeatherAdapter(Context context, List<Weather> weatherList) {
+        inflater = LayoutInflater.from(context);
         this.mContext = context;
         this.mWeatherList = weatherList;
     }
 
+    @NonNull
     @Override
-    public int getCount() {
+    public WeatherAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.list_item_row2, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull WeatherAdapter.ViewHolder holder, int position) {
+        holder.bind(mWeatherList.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
         return mWeatherList.size();
     }
 
-    @Override
-    public Object getItem(int i) {
-        return mWeatherList.get(i);
+    //set the data to the view
+
+    public void setmWeatherList(List<Weather> weatherList) {
+        this.mWeatherList = weatherList;
+        notifyDataSetChanged();
     }
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.list_item_row2, null);
-            viewHolder = new ViewHolder(view);
-            view.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) view.getTag();
-        }
-
-        // getting model data for the row
-        Weather weather = mWeatherList.get(i);
-        viewHolder.bindData(weather);
-
-        return view;
-    }
-
-    //create a class that extends BaseAdapter
-    private class ViewHolder {
-        //add all textviews from list_item_row2.xml
         private TextView timeTv;
         private TextView windTv;
         private TextView percipTv;
@@ -63,23 +58,20 @@ public class WeatherAdapter extends BaseAdapter {
         private TextView tempTv;
 
         //constructor
-        public ViewHolder(View view) {
+        public ViewHolder(@NonNull View view) {
+            super(view);
             timeTv = (TextView) view.findViewById(R.id.tv_time);
             windTv = (TextView) view.findViewById(R.id.tv_windinfo);
             percipTv = (TextView) view.findViewById(R.id.tv_persipitation);
             cloudcoverTv = (TextView) view.findViewById(R.id.tv_cloudcover);
             tempTv = (TextView) view.findViewById(R.id.tv_temperature);
         }
-
-        //bind data to the textviews
-        public void bindData(Weather weather) {
+        public void bind(final Weather weather) {
             timeTv.setText(weather.getTime());
             windTv.setText(String.valueOf(weather.getWindspeed_10m()));
             percipTv.setText(String.valueOf(weather.getPrecipitation()));
             cloudcoverTv.setText(String.valueOf(weather.getCloudcover()));
             tempTv.setText(String.valueOf(weather.getTemperature_2m()));
         }
-
     }
-
 }

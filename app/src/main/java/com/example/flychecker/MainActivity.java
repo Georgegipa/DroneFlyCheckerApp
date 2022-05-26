@@ -2,14 +2,17 @@ package com.example.flychecker;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -30,11 +33,17 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
 
     private List<Weather> mWeatherList = new ArrayList();
-    private ListView listView;
+
+    private RecyclerView mRecyclerView;
     private WeatherAdapter adapter;
 
     //weather for athens
-    private static final String url = "https://api.open-meteo.com/v1/forecast?latitude=37.9792&longitude=23.7166&timezone=Europe/Athens&hourly=temperature_2m,precipitation,cloudcover,windspeed_10m";
+    private static String url = "https://api.open-meteo.com/v1/forecast?hourly=temperature_2m,precipitation,cloudcover,windspeed_10m&timeformat=unixtime&latitude=37.9792&longitude=23.7166&timezone=Europe/Athens";
+
+    private void setURL(String timezoneID)
+    {
+        url = "https://api.open-meteo.com/v1/forecast?hourly=temperature_2m,precipitation,cloudcover,windspeed_10m&timeformat=unixtime&latitude=37.9792&longitude=23.7166&timezone="+timezoneID;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,22 +52,35 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = findViewById(R.id.list);
+        //get timezone from the device
+        String timezone = java.util.TimeZone.getDefault().getID();
+        setURL(timezone);
+        Log.d(TAG, "Timezone: "+timezone);
 
-        adapter = new WeatherAdapter(getApplicationContext(), mWeatherList);
-        listView.setAdapter(adapter);
+
+
+        setContentView(R.layout.activity_main);
+        mRecyclerView = findViewById(R.id.rv_list);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                layoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(mDividerItemDecoration);
 
         pDialog = new ProgressDialog(this);
         // Showing progress dialog before making http request
         pDialog.setMessage("Loading...");
         pDialog.show();
         Log.d(TAG, "onCreate: " + url);
+        Context currentContext = this;
         //display the whole response in the log
 
         JsonObjectRequest weatherReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -75,11 +97,11 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray temperatureJsonArray = jsonObject.getJSONArray("temperature_2m");
                     for (int i = 0; i < timeJsonArray.length(); i++) {
                         Weather weather = new Weather();
-                        weather.setTime(timeJsonArray.getString(i));
+                        weather.setTime(Helpers.convertUnixToDate(Integer.parseInt(timeJsonArray.getString(i)),false));
                         weather.setPrecipitation(Integer.parseInt(precipitationJsonArray.getString(i)));
                         weather.setCloudcover(Integer.parseInt(cloudcoverJsonArray.getString(i)));
                         weather.setWindspeed_10m(Float.parseFloat(windspeedJsonArray.getString(i)));
-                        weather.setTemperature_2m(temperatureJsonArray.getString(i));
+                        weather.setTemperature_2m(Float.parseFloat(temperatureJsonArray.getString(i)));
                         mWeatherList.add(weather);
                     }
                     //print a list of the weather objects
@@ -90,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
                     //create a toasts to show that the data is loaded
                     Toast.makeText(getApplicationContext(), "Data loaded", Toast.LENGTH_SHORT).show();
                     hidePDialog();
-                    adapter.notifyDataSetChanged();
+                    adapter = new WeatherAdapter(currentContext,mWeatherList);
+                    mRecyclerView.setAdapter(adapter);
 
 
                 } catch (JSONException e) {
@@ -114,10 +137,13 @@ public class MainActivity extends AppCompatActivity {
         hidePDialog();
     }
 
+
+
     private void hidePDialog() {
         if (pDialog != null) {
             pDialog.dismiss();
             pDialog = null;
         }
     }
+
 }

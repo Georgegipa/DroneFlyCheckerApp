@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Weather implements Parcelable {
-    private String temperature_2m;
+    private float temperature_2m;
     private int precipitation;
     private int cloudcover;
 //    private float winddirection_10m;
@@ -19,7 +19,7 @@ public class Weather implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.temperature_2m);
+        dest.writeFloat(this.temperature_2m);
         dest.writeInt(this.precipitation);
         dest.writeInt(this.cloudcover);
 //        dest.writeFloat(this.winddirection_10m);
@@ -29,7 +29,7 @@ public class Weather implements Parcelable {
     }
 
     public void readFromParcel(Parcel source) {
-        this.temperature_2m = source.readString();
+        this.temperature_2m = source.readFloat();
         this.precipitation = source.readInt();
         this.cloudcover = source.readInt();
 //        this.winddirection_10m = source.readFloat();
@@ -42,7 +42,7 @@ public class Weather implements Parcelable {
     }
 
     protected Weather(Parcel in) {
-        this.temperature_2m = in.readString();
+        this.temperature_2m = in.readFloat();
         this.precipitation = in.readInt();
         this.cloudcover = in.readInt();
 //        this.winddirection_10m = in.readFloat();
@@ -64,11 +64,11 @@ public class Weather implements Parcelable {
     };
 
     //add getters and setters
-    public String getTemperature_2m() {
+    public float getTemperature_2m() {
         return temperature_2m;
     }
 
-    public void setTemperature_2m(String temperature_2m) {
+    public void setTemperature_2m(float temperature_2m) {
         this.temperature_2m = temperature_2m;
     }
 
