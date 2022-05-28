@@ -16,8 +16,16 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("About");
-        //make the link clickable
+
+        setLinks();
+    }
+
+    //make the links in about activity clickable
+    private void setLinks()
+    {
         TextView linkTextView = findViewById(R.id.tv_website_url);
         linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        TextView linkTextView2 = findViewById(R.id.tv_cloud_api_url);
+        linkTextView2.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
