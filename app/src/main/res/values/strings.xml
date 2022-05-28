@@ -4,5 +4,5 @@
     <string name="app_description">An app designed to check if weather is suitable for UAV flying.</string>
     <string name="app_author">George Papageorgiou</string>
     <string name="app_author_email">ice18390180@uniwa.gr</string>
-    <string name="app_author_website">Website<a href="https://github.com/Georgegipa">LearnToDroid.com</a></string>
+    <string name="app_author_website"><a href="https://github.com/Georgegipa">Github.com</a></string>
 </resources>

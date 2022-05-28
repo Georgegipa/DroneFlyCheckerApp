@@ -9,7 +9,7 @@ public abstract class Helpers {
         sdf.setTimeZone(java.util.TimeZone.getDefault());
 
         //concat amPm to the end
-        String formated= sdf.format(date);
+        String formatted= sdf.format(date);
         if(return12HourFormat) {//TODO: add 12hour format support
             //convert a 24hr format to 12hr format
             int hour = date.getHours();
@@ -17,10 +17,10 @@ public abstract class Helpers {
             if(hour > 12) {
                 hour = hour - 12;
             }
-            formated = formated.replace("HH", String.valueOf(hour));
-            return formated + " " + amPm;
+            formatted = formatted.replace("HH", String.valueOf(hour));
+            return formatted + " " + amPm;
         }
         else
-            return formated;
+            return formatted;
     }
 }
