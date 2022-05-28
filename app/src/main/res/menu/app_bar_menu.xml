@@ -10,14 +10,14 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_settings2"
+        android:id="@+id/action_settings"
         android:icon="@drawable/ic_baseline_info_24"
         android:orderInCategory="100"
         android:title="Settings"
         app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_settings1"
+            android:id="@+id/action_about"
             android:icon="@drawable/ic_baseline_info_24"
             android:orderInCategory="100"
             android:title="About"

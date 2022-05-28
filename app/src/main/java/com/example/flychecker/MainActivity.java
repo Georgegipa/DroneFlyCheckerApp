@@ -4,6 +4,7 @@ package com.example.flychecker;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -59,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app_bar_menu, menu);
+
+        //add about menu item
+        MenuItem about = menu.findItem(R.id.action_about);
+        //change to about activity
+        about.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                return true;
+            }
+        });
 
         //add refresh button
         MenuItem refreshItem = menu.findItem(R.id.action_refresh);
