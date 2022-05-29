@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="General">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_theme"
+            android:summary="Enable/Disable dark mode"
+            android:title="Dark Theme" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Locale">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_format_time"
+            android:title="Change time format" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/language_entries"
+            android:entryValues="@array/language_entries"
+            android:key="pref_language"
+            android:summary="Currently selected: %s"
+            android:title="Language" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/wind_unit_entries"
+            android:entryValues="@array/wind_unit_entries"
+            android:key="pref_key_wind_unit"
+            android:summary="Currently selected: %s"
+            android:title="Wind unit" />
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/temperature_unit_entries"
+            android:entryValues="@array/temperature_unit_entries"
+            android:key="pref_key_temperature_unit"
+            android:summary="Currently selected: %s"
+            android:title="Select Temperature unit" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="UAV">
+
+        <EditTextPreference
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:defaultValue="John Doe"
+            android:key="pref_key_name"
+            android:summary="Name"
+            android:text="John Doe"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:title="Set UAV speed" />
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

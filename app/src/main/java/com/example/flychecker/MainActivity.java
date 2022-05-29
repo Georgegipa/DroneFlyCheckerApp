@@ -72,6 +72,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //add settings menu item
+        MenuItem settings = menu.findItem(R.id.action_settings);
+        //change to settings activity
+        settings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                return true;
+            }
+        });
+
         //add refresh button
         MenuItem refreshItem = menu.findItem(R.id.action_refresh);
         refreshItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

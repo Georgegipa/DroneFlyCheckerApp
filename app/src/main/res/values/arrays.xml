@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="language_entries" >
+        <item>English</item>
+        <item>Ελληνικά</item>
+    </string-array>
+
+    <string-array name="wind_unit_entries" >
+        <item>m/s</item>
+        <item>km/h</item>
+        <item>mph</item>
+        <item>knots</item>
+    </string-array>
+
+    <string-array name="temperature_unit_entries" >
+        <item>°C</item>
+        <item>°F</item>
+        <item>°K</item>
+    </string-array>
+</resources>
