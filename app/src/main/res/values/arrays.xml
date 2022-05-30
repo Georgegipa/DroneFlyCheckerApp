@@ -5,6 +5,11 @@
         <item>Ελληνικά</item>
     </string-array>
 
+    <string-array name="language_entries_vals" >
+        <item>en</item>
+        <item>gr</item>
+    </string-array>
+
     <string-array name="wind_unit_entries" >
         <item>m/s</item>
         <item>km/h</item>
@@ -16,5 +21,17 @@
         <item>°C</item>
         <item>°F</item>
         <item>°K</item>
+    </string-array>
+
+    <string-array name="theme_entries">
+        <item>Auto</item>
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
+
+    <string-array name="theme_entry_vals">
+        <item>auto</item>
+        <item>dark</item>
+        <item>light</item>
     </string-array>
 </resources>

@@ -37,7 +37,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private ProgressDialog pDialog;
 
     private List<Weather> mWeatherList = new ArrayList();
 
@@ -143,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        hidePDialog();
     }
 
     void refreshItems() {
@@ -190,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                     //create a toasts to show that the data is loaded
                     Toast.makeText(getApplicationContext(), "Data Refreshed!", Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
-                    hidePDialog();
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -204,13 +201,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         AppController.getInstance().addToRequestQueue(weatherReq);
-    }
-
-    private void hidePDialog() {
-        if (pDialog != null) {
-            pDialog.dismiss();
-            pDialog = null;
-        }
     }
 
 }

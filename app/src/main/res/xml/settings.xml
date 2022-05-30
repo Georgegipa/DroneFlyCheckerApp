@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="General">
-        <SwitchPreference
-            android:defaultValue="true"
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_entry_vals"
             android:key="pref_theme"
-            android:summary="Enable/Disable dark mode"
-            android:title="Dark Theme" />
+            android:summary="Currently selected: %s"
+            android:title="Theme" />
 
     </PreferenceCategory>
     <PreferenceCategory android:title="Locale">
@@ -18,7 +21,7 @@
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/language_entries"
-            android:entryValues="@array/language_entries"
+            android:entryValues="@array/language_entries_vals"
             android:key="pref_language"
             android:summary="Currently selected: %s"
             android:title="Language" />
