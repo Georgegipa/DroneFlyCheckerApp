@@ -5,22 +5,22 @@
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="300"
-        android:title="User"
+        android:title="refresh"
         android:icon="@drawable/ic_baseline_refresh_24"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_baseline_info_24"
         android:orderInCategory="100"
-        android:title="Settings"
+        android:title="@string/settings"
         app:showAsAction="never" />
 
     <item
             android:id="@+id/action_about"
             android:icon="@drawable/ic_baseline_info_24"
             android:orderInCategory="100"
-            android:title="About"
+            android:title="@string/about"
             app:showAsAction="never"/>
 
 </menu>

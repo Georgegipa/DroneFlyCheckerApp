@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        retrieveLang();
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.rv_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -112,12 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new WeatherAdapter(this, mWeatherList);
         mRecyclerView.setAdapter(adapter);
-
-//        pDialog = new ProgressDialog(this);
-//        // Showing progress dialog before making http request
-//        pDialog.setMessage("Loading...");
-//        pDialog.show();
-//        Log.d(TAG, "onCreate: " + url);
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -201,6 +197,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         AppController.getInstance().addToRequestQueue(weatherReq);
+    }
+
+    private void retrieveLang()
+    {
+        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
+        String lang = sharedPref.getString("language","");
+        Helpers.setLocale(this,lang);
     }
 
 }

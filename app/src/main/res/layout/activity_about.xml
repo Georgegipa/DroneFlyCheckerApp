@@ -117,7 +117,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
-                            android:text="Version"
+                            android:text="@string/version"
                             android:textSize="20sp"
                             android:textStyle="normal|bold" />
 
@@ -168,7 +168,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
-                            android:text="Author"
+                            android:text="@string/author"
                             android:textSize="20sp"
                             android:textStyle="normal|bold" />
 
@@ -218,7 +218,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
-                            android:text="Website"
+                            android:text="@string/website"
                             android:textSize="20sp"
                             android:textStyle="normal|bold" />
 
@@ -288,7 +288,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:contentDescription="@string/app_name"
-                        android:text="Licenses"
+                        android:text="@string/licenses"
                         android:textSize="23sp"
                         android:textStyle="normal|bold" />
 
@@ -325,7 +325,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
-                            android:text="Weather API"
+                            android:text="@string/weather_api_title"
                             android:textSize="20sp"
                             android:textStyle="normal|bold" />
 

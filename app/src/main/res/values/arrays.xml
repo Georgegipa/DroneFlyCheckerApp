@@ -7,7 +7,7 @@
 
     <string-array name="language_entries_vals" >
         <item>en</item>
-        <item>gr</item>
+        <item>el</item>
     </string-array>
 
     <string-array name="wind_unit_entries" >

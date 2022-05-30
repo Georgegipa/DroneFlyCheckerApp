@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_description">Μια εφαρμογή σχεδιασμένη για τον έλεγχο των καιρικών συνθηκών πριν την απογείωση μη επανδρωμένων αεροσκαφών(drone).</string>
+    <string name="app_author">Γιώργος Παπαγεωργίου</string>
+    <string name="version">Έκδοση</string>
+    <string name="author">Εκδότης</string>
+    <string name="website">Ιστοσελίδα</string>
+    <string name="licenses">Άδειες κώδικα</string>
+    <string name="weather_api_title">API Καιρού</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="about">Πληροφορίες</string>
+</resources>
