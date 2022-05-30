@@ -9,4 +9,17 @@
     <string name="weather_api_title">API Καιρού</string>
     <string name="settings">Ρυθμίσεις</string>
     <string name="about">Πληροφορίες</string>
+    <string name="theme">Θέμα</string>
+    <string name="locale">Τοποθεσία</string>
+    <string name="switch_to_12h">Εναλλαγή στην 12ώρη μορφή</string>
+    <string name="language">Γλώσσα</string>
+    <string name="currently_selected">Επιλεγμένο: %s</string>
+    <string name="general">Γενικά</string>
+    <string name="wind_unit">Μονάδα Ανέμου</string>
+    <string name="temperature_unit">Μονάδα Θερμοκρασίας</string>
+    <string name="set_max_drone_speed">Μέγιστη ταχύτητα drone</string>
+    <string name="data_refreshed">Τα δεδομένα ανανεώθηκαν!</string>
+    <string name="dark">Σκούρο</string>
+    <string name="light">Ανοιχτό</string>
+    <string name="auto">Αυτόματο</string>
 </resources>

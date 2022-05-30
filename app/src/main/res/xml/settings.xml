@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="General">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/general" android:icon="@drawable/ic_baseline_settings_24">
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="auto"
             android:entries="@array/theme_entries"
             android:entryValues="@array/theme_entry_vals"
+            android:icon="@drawable/ic_baseline_brush_24"
             android:key="pref_theme"
             android:summary="Currently selected: %s"
-            android:title="Theme" />
+            android:title="@string/theme" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="Locale">
+    <PreferenceCategory android:title="@string/locale" android:icon="@drawable/ic_mdi_web">
 
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
+            android:icon="@drawable/ic_mdi_clock"
             android:key="pref_format_time"
-            android:title="Change time format" />
+            android:title="@string/switch_to_12h" />
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="en"
             android:entries="@array/language_entries"
             android:entryValues="@array/language_entries_vals"
+            android:icon="@drawable/ic_baseline_translate_24"
             android:key="pref_language"
-            android:summary="Currently selected: %s"
-            android:title="Language" />
+            android:summary="@string/currently_selected"
+            android:title="@string/language" />
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="m/s"
             android:entries="@array/wind_unit_entries"
             android:entryValues="@array/wind_unit_entries"
+            android:icon="@drawable/ic_mdi_windsock"
             android:key="pref_key_wind_unit"
-            android:summary="Currently selected: %s"
-            android:title="Wind unit" />
+            android:summary="@string/currently_selected"
+            android:title="@string/wind_unit" />
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="°C"
             android:entries="@array/temperature_unit_entries"
             android:entryValues="@array/temperature_unit_entries"
+            android:icon="@drawable/ic_baseline_device_thermostat_24"
             android:key="pref_key_temperature_unit"
-            android:summary="Currently selected: %s"
-            android:title="Select Temperature unit" />
+            android:summary="@string/currently_selected"
+            android:title="@string/temperature_unit" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="UAV">
+    <PreferenceCategory android:title="Drone" app:icon="@drawable/ic_mdi_airplane_cog">
 
         <EditTextPreference
             android:layout_width="match_parent"
@@ -57,13 +63,14 @@
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:defaultValue="John Doe"
+            android:icon="@drawable/ic_baseline_speed_24"
             android:key="pref_key_name"
             android:summary="Name"
             android:text="John Doe"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:title="Set UAV speed" />
+            android:title="@string/set_max_drone_speed" />
 
 
     </PreferenceCategory>

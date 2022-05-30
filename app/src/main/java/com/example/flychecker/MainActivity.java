@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        retrieveLang();
+        setPrevOptions();
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.rv_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                         mWeatherList.add(weather);
                     }
                     //create a toasts to show that the data is loaded
-                    Toast.makeText(getApplicationContext(), "Data Refreshed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.data_refreshed), Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
@@ -199,11 +199,13 @@ public class MainActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(weatherReq);
     }
 
-    private void retrieveLang()
+
+    private void setPrevOptions()
     {
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
         String lang = sharedPref.getString("language","");
         Helpers.setLocale(this,lang);
+        Helpers.setPrevTheme(this);
     }
 
 }

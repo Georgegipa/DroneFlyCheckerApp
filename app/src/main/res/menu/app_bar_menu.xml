@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_baseline_refresh_24"
         android:orderInCategory="300"
         android:title="refresh"
-        android:icon="@drawable/ic_baseline_refresh_24"
         app:showAsAction="always" />
 
     <item
@@ -17,10 +17,10 @@
         app:showAsAction="never" />
 
     <item
-            android:id="@+id/action_about"
-            android:icon="@drawable/ic_baseline_info_24"
-            android:orderInCategory="100"
-            android:title="@string/about"
-            app:showAsAction="never"/>
+        android:id="@+id/action_about"
+        android:icon="@drawable/ic_baseline_info_24"
+        android:orderInCategory="100"
+        android:title="@string/about"
+        app:showAsAction="never" />
 
 </menu>

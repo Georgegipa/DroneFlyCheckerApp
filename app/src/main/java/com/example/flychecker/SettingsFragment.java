@@ -1,9 +1,11 @@
 package com.example.flychecker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -12,13 +14,11 @@ import androidx.preference.SwitchPreference;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private SharedPreferences sp;
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
-        sp = this.getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
     }
 
 
@@ -26,8 +26,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onResume() {
         super.onResume();
         //unregister the preferenceChange listener
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -40,14 +39,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             ListPreference listPreference = (ListPreference) preference;
             if (key.equals("pref_theme")) {
                 String theme = listPreference.getValue();
-                if (theme.equals("light")) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                } else if (theme.equals("dark")) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                Helpers.setNewTheme(this.getActivity(), theme);
             } else if (key.equals("pref_language")) {
                 String language = listPreference.getValue();
+                this.getActivity().recreate();//recreate the activity to change the language
                 if (language.equals("en")) {
                     //change language to english
                     Helpers.setLocale(this.getActivity(), "en");
@@ -73,8 +68,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onPause() {
         super.onPause();
         //unregister the preference change listener
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
-
 }
