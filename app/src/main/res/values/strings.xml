@@ -5,7 +5,8 @@
     <string name="app_author">George Papageorgiou</string>
     <string name="app_author_email" translatable="false">ice18390180@uniwa.gr</string>
     <string name="app_author_website" translatable="false"><a href="https://github.com/Georgegipa">Github.com</a></string>
-    <string name="weather_api" translatable="false"><a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a></string>
+    <string name="weather_api"><a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a></string>
+    <string name="icons_by"><a href="https://materialdesignicons.com/">Icons provided by MaterialDesignIcons</a></string>
     <string name="version">Version</string>
     <string name="author">Author</string>
     <string name="website">Website</string>
@@ -26,4 +27,5 @@
     <string name="dark">Dark</string>
     <string name="light">Light</string>
     <string name="auto">Auto</string>
+    <string name="icons">Icons</string>
 </resources>

@@ -27,5 +27,7 @@ public class AboutActivity extends AppCompatActivity {
         linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
         TextView linkTextView2 = findViewById(R.id.tv_cloud_api_url);
         linkTextView2.setMovementMethod(LinkMovementMethod.getInstance());
+        TextView linkTextView3 = findViewById(R.id.tv_icons_website_url);
+        linkTextView3.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
