@@ -16,8 +16,10 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.about));
-
         setLinks();
+        //set version
+        TextView version = findViewById(R.id.tv_version_number);
+        version.setText(BuildConfig.VERSION_NAME);
     }
 
     //make the links in about activity clickable

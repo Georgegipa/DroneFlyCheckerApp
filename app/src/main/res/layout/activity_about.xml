@@ -38,7 +38,7 @@
                     android:layout_height="75dp"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
-                    android:contentDescription="@string/app_name"
+                    android:contentDescription="@null"
                     android:src="@mipmap/app_icon" />
 
                 <TextView
@@ -59,7 +59,6 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:contentDescription="@string/app_version"
                     android:text="@string/app_description"
                     android:textSize="15sp" />
 
@@ -101,7 +100,8 @@
                         android:layout_height="35dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:src="@drawable/ic_baseline_info_24"/>
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_baseline_info_24" />
 
 
                     <LinearLayout
@@ -113,23 +113,22 @@
                             android:id="@+id/tv_version"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
                             android:text="@string/version"
                             android:textSize="20sp"
-                            android:textStyle="normal|bold" />
+                            android:textStyle="normal|bold"
+                            tools:ignore="RtlHardcoded" />
 
                         <TextView
                             android:id="@+id/tv_version_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
-                            android:text="@string/app_version"
                             android:textSize="15sp" />
 
                     </LinearLayout>
@@ -152,6 +151,7 @@
                         android:layout_height="35dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_baseline_person_24" />
 
 
@@ -164,7 +164,7 @@
                             android:id="@+id/tv_dev"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
@@ -176,7 +176,7 @@
                             android:id="@+id/tv_dev_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:text="@string/app_author"
@@ -202,6 +202,7 @@
                         android:layout_height="35dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_baseline_web_24" />
 
 
@@ -214,7 +215,7 @@
                             android:id="@+id/tv_website"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
@@ -226,7 +227,7 @@
                             android:id="@+id/tv_website_url"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:text="@string/app_author_website"
@@ -248,8 +249,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
             app:cardCornerRadius="10dp"
             app:cardElevation="10dp"
             app:cardMaxElevation="12dp">
@@ -278,9 +279,9 @@
                         android:layout_height="35dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:src="@drawable/ic_baseline_book_24"/>
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_baseline_book_24" />
 
-<!--                    create vertically centered textview-->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -309,6 +310,7 @@
                         android:layout_height="35dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_baseline_cloud_24" />
 
 
@@ -321,7 +323,7 @@
                             android:id="@+id/tv_cloud_api"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:contentDescription="@string/app_name"
@@ -333,7 +335,7 @@
                             android:id="@+id/tv_cloud_api_url"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:text="@string/weather_api"
@@ -359,6 +361,7 @@
                         android:layout_height="35dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_mdi_puzzle" />
 
 
@@ -371,7 +374,7 @@
                             android:id="@+id/tv_icons_website"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:text="@string/icons"
@@ -382,7 +385,7 @@
                             android:id="@+id/tv_icons_website_url"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:text="@string/icons_by"
@@ -390,11 +393,13 @@
 
                     </LinearLayout>
 
-
                 </LinearLayout>
+
             </LinearLayout>
 
 
         </androidx.cardview.widget.CardView>
+
     </LinearLayout>
+
 </ScrollView>

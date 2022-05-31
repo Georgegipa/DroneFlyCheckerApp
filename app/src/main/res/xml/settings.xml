@@ -9,7 +9,7 @@
             android:entryValues="@array/theme_entry_vals"
             android:icon="@drawable/ic_baseline_brush_24"
             android:key="pref_theme"
-            android:summary="Currently selected: %s"
+            android:summary="@string/currently_selected"
             android:title="@string/theme" />
 
     </PreferenceCategory>
