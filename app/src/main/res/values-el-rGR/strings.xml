@@ -10,7 +10,7 @@
     <string name="settings">Ρυθμίσεις</string>
     <string name="about">Πληροφορίες</string>
     <string name="theme">Θέμα</string>
-    <string name="locale">Τοποθεσία</string>
+    <string name="locale">Τοπικές ρυθμίσεις</string>
     <string name="switch_to_12h">Εναλλαγή στην 12ώρη μορφή</string>
     <string name="language">Γλώσσα</string>
     <string name="currently_selected">Επιλεγμένο: %s</string>

@@ -16,12 +16,12 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     private Context mContext;
     private LayoutInflater inflater;
-    private List<Weather> mWeatherList;
+    private List<RawWeatherData> rawWeatherDataList;
 
-    public WeatherAdapter(Context context, List<Weather> weatherList) {
+    public WeatherAdapter(Context context, List<RawWeatherData> weatherList) {
         inflater = LayoutInflater.from(context);
         this.mContext = context;
-        this.mWeatherList = weatherList;
+        this.rawWeatherDataList = weatherList;
     }
 
     @NonNull
@@ -34,18 +34,18 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull WeatherAdapter.ViewHolder holder, int position) {
-        holder.bind(mWeatherList.get(position));
+        holder.bind(rawWeatherDataList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mWeatherList.size();
+        return rawWeatherDataList.size();
     }
 
     //set the data to the view
 
-    public void setmWeatherList(List<Weather> weatherList) {
-        this.mWeatherList = weatherList;
+    public void setmWeatherList(List<RawWeatherData> weatherList) {
+        this.rawWeatherDataList = weatherList;
         notifyDataSetChanged();
     }
 
@@ -68,13 +68,13 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
             tempTv = (TextView) view.findViewById(R.id.tv_temperature);
         }
         @SuppressLint("SetTextI18n")
-        public void bind(final Weather weather) {
+        public void bind(RawWeatherData weather) {
 
-            timeTv.setText("Time:"+weather.getTime());
-            windTv.setText("Wind Speed: "+weather.getWindspeed_10m()+"m/s");
+            timeTv.setText("Time:"+Helpers.convertUnixToDate(weather.getTime(),false));
+            windTv.setText("Wind Speed: "+weather.getWindSpeed10m()+"m/s");
             percipTv.setText("Precipitation: "+weather.getPrecipitation()+"mm");
             cloudcoverTv.setText("CloudCoverage:"+weather.getCloudcover()+"%");
-            tempTv.setText("Temperature:"+weather.getTemperature_2m()+"°C");
+            tempTv.setText("Temperature:"+weather.getTemperature()+"°C");
         }
     }
 }

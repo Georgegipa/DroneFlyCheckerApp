@@ -12,6 +12,7 @@
             android:summary="@string/currently_selected"
             android:title="@string/theme" />
 
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/locale" android:icon="@drawable/ic_mdi_web">
 
@@ -62,11 +63,12 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
-            android:defaultValue="John Doe"
+            android:defaultValue="10"
             android:icon="@drawable/ic_baseline_speed_24"
-            android:key="pref_key_name"
-            android:summary="Name"
-            android:text="John Doe"
+            android:key="pref_max_speed"
+            android:summary="@string/currently_selected"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
