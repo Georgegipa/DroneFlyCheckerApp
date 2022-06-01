@@ -1,15 +1,13 @@
 package com.example.flychecker;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreference;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -45,27 +43,30 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 this.getActivity().recreate();//recreate the activity to change the language
                 if (language.equals("en")) {
                     //change language to english
-                    Helpers.setLocale(this.getActivity(), "en");
+                    PreferencesHelpers.setLocale(this.getActivity(), "en");
                 } else if (language.equals("el")) {
                     //change language to greek
-                    Helpers.setLocale(this.getActivity(), "el");
+                    PreferencesHelpers.setLocale(this.getActivity(), "el");
                 }
             } else if (key.equals("pref_key_wind_unit")) {
                 String windUnit = listPreference.getValue();
 
-                Helpers.setWindSpeedUnit(this.getActivity(), windUnit);
+                PreferencesHelpers.setWindSpeedUnit(this.getActivity(), windUnit);
 
             } else if (key.equals("pref_key_temperature_unit")) {
                 String tempUnit = listPreference.getValue();
-                Helpers.setTemperatureUnit(this.getActivity(), tempUnit);
-            }
-            else if(key.equals("pref_key_hour_format")){
+                PreferencesHelpers.setTemperatureUnit(this.getActivity(), tempUnit);
+            } else if (key.equals("pref_key_hour_format")) {
                 String hourFormat = listPreference.getValue();
-                Helpers.setTimeFormat(this.getActivity(), hourFormat);
+                PreferencesHelpers.setTimeFormat(this.getActivity(), hourFormat);
             }
 
         } else if (preference instanceof SwitchPreference) {
-            Log.d(TAG, "onSharedPreferenceChanged: " + key);
+            if (key.equals("pref_key_waterproof")) {
+                boolean waterproof = sharedPreferences.getBoolean("pref_key_waterproof", false);
+                PreferencesHelpers.setDroneWaterproof(this.getActivity(), waterproof);
+            }
+        } else if (preference instanceof SeekBarPreference) {
         }
     }
 

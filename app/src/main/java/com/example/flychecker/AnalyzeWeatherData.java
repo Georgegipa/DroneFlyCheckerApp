@@ -102,6 +102,7 @@ public class AnalyzeWeatherData {
         double precip = weather.getPrecipitation();
         Status status;
         //TODO: ask user if they have a waterproof drone
+        Log.d("waterproof", "waterproof: " + PreferencesHelpers.getDroneWaterproof(context));
         if(precip > 0 && precip < 1.0)
             status = Status.CAUTION;
         else if(precip >= 1.0 && precip < 2.0)

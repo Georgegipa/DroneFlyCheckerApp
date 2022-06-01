@@ -55,27 +55,26 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Drone" app:icon="@drawable/ic_mdi_airplane_cog">
 
-        <EditTextPreference
+        <SeekBarPreference
             android:layout_width="match_parent"
+            app:showSeekBarValue="true"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
             android:layout_weight="1"
-            android:defaultValue="10"
             android:icon="@drawable/ic_baseline_speed_24"
-            android:key="pref_max_speed"
-            android:summary="%s"
-            android:inputType="numberDecimal"
-            android:digits="0123456789"
+            android:key="pref_key_drone_fly_speed"
+            android:defaultValue="15"
+            android:max="75"
+            android:min="1"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             android:title="@string/set_max_drone_speed" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_mdi_water_check"
+            android:key="pref_key_waterproof"
+            android:title="@string/waterproof" />
 
 
     </PreferenceCategory>

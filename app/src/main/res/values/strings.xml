@@ -21,7 +21,7 @@
     <string name="language">Language</string>
     <string name="wind_unit">Wind Unit</string>
     <string name="temperature_unit">Temperature Unit</string>
-    <string name="set_max_drone_speed">Max drone speed</string>
+    <string name="set_max_drone_speed">Max drone speed (m/s)</string>
     <string name="data_refreshed">Data refreshed!</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
@@ -52,4 +52,5 @@
     <string name="cloud_cover_danger">Extremely cloudy weather, low visibility and possible rain or snow</string>
     <string name="gust_caution">High wind speed, try avoid flying in the current environment</string>
     <string name="gust_danger">Current wind speeds are too high to allow drone returning home.</string>
+    <string name="waterproof">Waterproof</string>
 </resources>

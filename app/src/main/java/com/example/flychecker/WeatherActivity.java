@@ -1,8 +1,6 @@
 package com.example.flychecker;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,7 +34,7 @@ public class WeatherActivity extends AppCompatActivity {
             ImageView temperatureIv = findViewById(R.id.iv_temperature);
             TextView temperatureTv = findViewById(R.id.tv_temperature);
             TextView temperatureSummaryTv = findViewById(R.id.tv_temperature_summary);
-            temperatureTv.setText(getString(R.string.Temperature)+":"+Helpers.getTemperatureUnit(this,weather.getTemperature()));
+            temperatureTv.setText(getString(R.string.Temperature)+":"+ PreferencesHelpers.getTemperatureUnit(this,weather.getTemperature()));
             temperatureIv.setColorFilter(getResources().getColor(Helpers.statusToColor(wd.checkTemperature())));
             dynamicHide(temperatureSummaryTv,wd.getTemperatureSummary());
             //setup humidity card view
@@ -59,9 +57,9 @@ public class WeatherActivity extends AppCompatActivity {
             TextView wind10mTv = findViewById(R.id.tv_wind_10m);
             TextView wind80mTv = findViewById(R.id.tv_wind_80m);
             TextView wind120mTv = findViewById(R.id.tv_wind_120m);
-            wind10mTv.setText(getString(R.string.Wind)+"10m: "+Helpers.getWindSpeedUnit(this,weather.getWindSpeed10m()));
-            wind80mTv.setText(getString(R.string.Wind)+" 80m: "+Helpers.getWindSpeedUnit(this,weather.getWindSpeed80m()));
-            wind120mTv.setText(getString(R.string.Wind)+" 120m: "+Helpers.getWindSpeedUnit(this,weather.getWindSpeed120m()));
+            wind10mTv.setText(getString(R.string.Wind)+"10m: "+ PreferencesHelpers.getWindSpeedUnit(this,weather.getWindSpeed10m()));
+            wind80mTv.setText(getString(R.string.Wind)+" 80m: "+ PreferencesHelpers.getWindSpeedUnit(this,weather.getWindSpeed80m()));
+            wind120mTv.setText(getString(R.string.Wind)+" 120m: "+ PreferencesHelpers.getWindSpeedUnit(this,weather.getWindSpeed120m()));
             Status[] windStatus = wd.checkWindSpeeds();
             windIv.setColorFilter(getResources().getColor(Helpers.statusToColor(wd.checkAllWindSpeeds())));
             //set drawable to textview
@@ -73,7 +71,7 @@ public class WeatherActivity extends AppCompatActivity {
             ImageView gustsIv = findViewById(R.id.iv_gusts);
             TextView gustsTv = findViewById(R.id.tv_gusts);
             TextView gustsSummaryTv = findViewById(R.id.tv_gusts_summary);
-            gustsTv.setText(getString(R.string.Gusts)+":"+Helpers.getWindSpeedUnit(this,weather.getGust()));
+            gustsTv.setText(getString(R.string.Gusts)+":"+ PreferencesHelpers.getWindSpeedUnit(this,weather.getGust()));
             gustsIv.setColorFilter(getResources().getColor(Helpers.statusToColor(wd.checkGust())));
             dynamicHide(gustsSummaryTv,wd.getGustSummary());
             //setup cloudcover card view

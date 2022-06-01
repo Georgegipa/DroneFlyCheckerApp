@@ -3,32 +3,11 @@ package com.example.flychecker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import android.text.format.DateFormat;
-import android.util.Log;
-
-import java.util.Locale;
-
 //Helper functions to avoid code repetition
 public abstract class Helpers {
-    final int[] time = {R.string.am, R.string.pm};
-
-    //change app language
-    public static void setLocale(Activity activity, String languageCode) {
-        SharedPreferences.Editor editor = activity.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
-        editor.putString("language", languageCode);
-        editor.apply();
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Resources resources = activity.getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
-    }
 
     public static int statusToIcon(Status status) {
         switch (status) {
@@ -62,12 +41,6 @@ public abstract class Helpers {
             default:
                 return R.color.green;
         }
-    }
-
-    //get app language
-    public static String getLanguage(Activity activity) {
-        SharedPreferences prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE);
-        return prefs.getString("language", "");
     }
 
     //change the theme
@@ -113,8 +86,7 @@ public abstract class Helpers {
         sdf.setTimeZone(java.util.TimeZone.getDefault());
         String formattedDate = sdf.format(date).split(" ")[0];
         String time = sdf.format(date).split(" ")[1];
-        String timeFormat = getTimeFormat(context);
-        if (timeFormat.equals("12h")) {
+        if (!PreferencesHelpers.is24HourFormat(context)) {
             formattedDate += " " + convertTo12h(context, time);
         } else
             formattedDate += " " + time;
@@ -141,86 +113,4 @@ public abstract class Helpers {
         return hour + ":" + timeSplit[1] + " " + amPm;
     }
 
-    //get the system time format
-    private static String getTimeFormat(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
-        if (prefs.contains("time_format")) {
-            return prefs.getString("time_format", "");
-        } else {
-            return DateFormat.is24HourFormat(context) ? "24h" : "12h";
-        }
-    }
-
-    public static void setTimeFormat(Activity activity, String timeFormat) {
-        SharedPreferences.Editor prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
-        switch (timeFormat) {
-            case "12h":
-                prefs.putString("time_format", "12h");
-                break;
-            case "24h":
-                prefs.putString("time_format", "24h");
-                break;
-            default:
-                prefs.putString("time_format", DateFormat.is24HourFormat(activity) ? "24h" : "12h");
-                break;
-        }
-        prefs.apply();
-    }
-
-    public static String getTemperatureUnit(Activity activity, double ms) {
-        SharedPreferences prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE);
-        String temp = prefs.getString("temperature_unit", "");
-        if (prefs.contains("temperature_unit")) {
-            switch (temp) {
-                case "°F":
-                    return UnitConverters.convertToFarhenheit(ms) + "°F";
-                case "°K":
-                    return UnitConverters.convertToKelvin(ms) + "°K";
-                default:
-                    return ms + "°C";
-            }
-        } else
-            return ms + "°C";
-    }
-
-    public static void setTemperatureUnit(Activity activity, String temperatureUnit) {
-        SharedPreferences.Editor prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
-        prefs.putString("temperature_unit", temperatureUnit);
-        prefs.apply();
-    }
-
-    public static String getWindSpeedUnit(Activity activity, double ms) {
-        SharedPreferences prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE);
-        String speed = prefs.getString("speed_unit", "");
-        switch (speed) {
-            case "km/h":
-                return UnitConverters.convertToKmph(ms) + "km/h";
-            case "mph":
-                return UnitConverters.convertToMph(ms) + "mph";
-            case "knots":
-                return UnitConverters.convertToKnots(ms) + "knots";
-            default:
-                return ms + "m/s";
-        }
-
-    }
-
-    public static void setWindSpeedUnit(Activity activity, String speedUnit) {
-        SharedPreferences.Editor prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
-        switch (speedUnit) {
-            case "km/h":
-                prefs.putString("speed_unit", "km/h");
-                break;
-            case "mph":
-                prefs.putString("speed_unit", "mph");
-                break;
-            case "knots":
-                prefs.putString("speed_unit", "knots");
-                break;
-            default:
-                prefs.putString("speed_unit", "m/s");
-                break;
-        }
-        prefs.apply();
-    }
 }

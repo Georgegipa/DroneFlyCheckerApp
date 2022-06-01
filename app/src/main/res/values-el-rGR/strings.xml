@@ -16,7 +16,7 @@
     <string name="general">Γενικά</string>
     <string name="wind_unit">Μονάδα Ανέμου</string>
     <string name="temperature_unit">Μονάδα Θερμοκρασίας</string>
-    <string name="set_max_drone_speed">Μέγιστη ταχύτητα drone</string>
+    <string name="set_max_drone_speed">Μέγιστη ταχύτητα drone (m/s)</string>
     <string name="data_refreshed">Τα δεδομένα ανανεώθηκαν!</string>
     <string name="dark">Σκούρο</string>
     <string name="light">Ανοιχτό</string>
@@ -49,4 +49,5 @@
     <string name="cloud_cover_danger">Εξαιρετικά συννεφιασμένος καιρός, χαμηλή ορατότητα και πιθανή βροχή ή χιόνι</string>
     <string name="gust_caution">Υψηλή ταχύτητα ανέμου, προσπαθήστε να αποφύγετε να πετάτε στο τρέχον περιβάλλον</string>
     <string name="gust_danger">Οι τρέχουσες ταχύτητες ανέμου είναι πολύ υψηλές για να επιτρέψουν το drone να επιστρέψει στο σπίτι.</string>
+    <string name="waterproof">Αδιάβροχο</string>
 </resources>
