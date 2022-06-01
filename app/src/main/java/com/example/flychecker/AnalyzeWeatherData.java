@@ -1,5 +1,7 @@
 package com.example.flychecker;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,9 +9,11 @@ import java.util.List;
 public class AnalyzeWeatherData {
 
     private RawWeatherData weather;
+    private double maxDroneSpeed;
 
     AnalyzeWeatherData(RawWeatherData weather) {
         this.weather = weather;
+        maxDroneSpeed = 13;//TODO: get max drone speed from settings
     }
     //check if the temperature is safe
     public Status checkTemperature() {
@@ -33,8 +37,6 @@ public class AnalyzeWeatherData {
     }
 
     public Status[] checkWindSpeeds() {
-
-        double maxDroneSpeed = 13;//TODO: get max drone speed from settings
         //windspeed in m/s
         double[] windSpeeds= {weather.getWindSpeed10m(), weather.getWindSpeed80m(), weather.getWindSpeed120m()};
         Status[] status = new Status[windSpeeds.length];
@@ -76,6 +78,30 @@ public class AnalyzeWeatherData {
         return status;
     }
 
+    public Status checkCloudCover() {
+        int cloudCover = weather.getCloudcover();
+        Status status;
+        if( cloudCover > 50 && cloudCover <90)//very cloudy
+            status = Status.CAUTION;
+        else  if (cloudCover >= 90)// extremely cloudy
+            status = Status.DANGER;
+        else
+            status = Status.SAFE;
+        return status;
+    }
+
+    public Status checkGust() {
+        double gust = weather.getGust();
+        Status status;
+        //if gust is higher than 2/3 of max speed
+        if(gust > maxDroneSpeed * 2/3)
+            status = Status.DANGER;
+        else if(gust > maxDroneSpeed / 2)
+            status = Status.CAUTION;
+        else
+            status = Status.SAFE;
+        return status;
+    }
 
     public Status checkAll() {
         List<Status> statusList = new ArrayList<>(Arrays.asList(checkWindSpeeds()));
@@ -83,6 +109,8 @@ public class AnalyzeWeatherData {
         statusList.add(checkTime());
         statusList.add(checkPrecipitation());
         statusList.add(checkHumidity());
+        statusList.add(checkCloudCover());
+        statusList.add(checkGust());
         Status finalStatus = Status.SAFE;
         for (Status s : statusList) {
             if (s == Status.DANGER)
@@ -91,14 +119,6 @@ public class AnalyzeWeatherData {
                 finalStatus = Status.CAUTION;
         }
         return finalStatus;
-    }
-
-    private void checkCloudCover(float cloudCover) {
-
-    }
-
-    private void checkGusts(float gusts) {
-
     }
 
 }

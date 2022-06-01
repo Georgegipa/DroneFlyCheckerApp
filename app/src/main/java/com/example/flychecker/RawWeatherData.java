@@ -11,7 +11,7 @@ public class RawWeatherData implements Parcelable {
     private double windSpeed80m;//m/s
     private double windSpeed120m;//m/s
     private double precipitation;//mm
-    private double cloudcover;
+    private int cloudcover;
     private int weathercode;
     private double humidity;
 
@@ -41,11 +41,11 @@ public class RawWeatherData implements Parcelable {
         this.precipitation = precipitation;
     }
 
-    public double getCloudcover() {
+    public int getCloudcover() {
         return cloudcover;
     }
 
-    public void setCloudcover(double cloudcover) {
+    public void setCloudcover(int cloudcover) {
         this.cloudcover = cloudcover;
     }
 
@@ -89,6 +89,14 @@ public class RawWeatherData implements Parcelable {
         this.windSpeed120m = windSpeed120m;
     }
 
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(double humidity) {
+        this.humidity = humidity;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -103,7 +111,7 @@ public class RawWeatherData implements Parcelable {
         dest.writeDouble(this.windSpeed80m);
         dest.writeDouble(this.windSpeed120m);
         dest.writeDouble(this.precipitation);
-        dest.writeDouble(this.cloudcover);
+        dest.writeInt(this.cloudcover);
         dest.writeInt(this.weathercode);
         dest.writeDouble(this.humidity);
     }
@@ -116,7 +124,7 @@ public class RawWeatherData implements Parcelable {
         this.windSpeed80m = source.readDouble();
         this.windSpeed120m = source.readDouble();
         this.precipitation = source.readDouble();
-        this.cloudcover = source.readDouble();
+        this.cloudcover = source.readInt();
         this.weathercode = source.readInt();
         this.humidity = source.readDouble();
     }
@@ -132,7 +140,7 @@ public class RawWeatherData implements Parcelable {
         this.windSpeed80m = in.readDouble();
         this.windSpeed120m = in.readDouble();
         this.precipitation = in.readDouble();
-        this.cloudcover = in.readDouble();
+        this.cloudcover = in.readInt();
         this.weathercode = in.readInt();
         this.humidity = in.readDouble();
     }
@@ -148,12 +156,4 @@ public class RawWeatherData implements Parcelable {
             return new RawWeatherData[size];
         }
     };
-
-    public double getHumidity() {
-        return humidity;
-    }
-
-    public void setHumidity(double humidity) {
-        this.humidity = humidity;
-    }
 }

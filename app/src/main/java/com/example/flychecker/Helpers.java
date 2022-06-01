@@ -118,7 +118,6 @@ public abstract class Helpers {
             formattedDate += " " + convertTo12h(context, time);
         } else
             formattedDate += " " + time;
-        Log.d("formattedDate", formattedDate);
         return formattedDate;
     }
 

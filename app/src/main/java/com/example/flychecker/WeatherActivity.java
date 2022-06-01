@@ -71,10 +71,16 @@ public class WeatherActivity extends AppCompatActivity {
             wind10mTv.setCompoundDrawablesWithIntrinsicBounds(Helpers.statusToIcon(windStatus[0]), 0, 0, 0);
             wind80mTv.setCompoundDrawablesWithIntrinsicBounds(Helpers.statusToIcon(windStatus[1]), 0, 0, 0);
             wind120mTv.setCompoundDrawablesWithIntrinsicBounds(Helpers.statusToIcon(windStatus[2]), 0, 0, 0);
-
-
-
-
+            //setup gusts card view
+            ImageView gustsIv = findViewById(R.id.iv_gusts);
+            TextView gustsTv = findViewById(R.id.tv_gusts);
+            gustsTv.setText(getString(R.string.Gusts)+":"+Helpers.getWindSpeedUnit(this,weather.getGust()));
+            gustsIv.setColorFilter(getResources().getColor(Helpers.statusToColor(analyzeWeatherData.checkGust())));
+            //setup cloudcover card view
+            ImageView cloudcoverIv = findViewById(R.id.iv_cloudcover);
+            TextView cloudcoverTv = findViewById(R.id.tv_cloudcover);
+            cloudcoverTv.setText(getString(R.string.CloudCover)+":"+weather.getCloudcover()+"%");
+            cloudcoverIv.setColorFilter(getResources().getColor(Helpers.statusToColor(analyzeWeatherData.checkCloudCover())));
         }
 
     }

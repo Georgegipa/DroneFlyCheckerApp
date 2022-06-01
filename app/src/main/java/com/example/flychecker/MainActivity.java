@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     @NonNull
     private String setURL(String timezoneID) {
         String apiURL = "https://api.open-meteo.com/v1/forecast";
-        String hourlyVariables = "hourly=temperature_2m,relativehumidity_2m,shortwave_radiation,precipitation,cloudcover,weathercode,windspeed_10m,windspeed_80m,windspeed_120m,windspeed_180m,windgusts_10m";
+        String hourlyVariables = "hourly=temperature_2m,relativehumidity_2m,precipitation,cloudcover,weathercode,windspeed_10m,windspeed_80m,windspeed_120m,windgusts_10m";
         String timezone = "timezone=" + timezoneID;
         String poslat = "latitude=" + "37.9792";
         String poslon = "longitude=" + "23.7166";
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
             rawWeatherData.setWindSpeed120m(Double.parseDouble(windspeed_120mJsonArray.getString(i)));
             rawWeatherData.setPrecipitation(Double.parseDouble(precipitationJsonArray.getString(i)));
             rawWeatherData.setWeathercode(Integer.parseInt(weathercodeJsonArray.getString(i)));
-            rawWeatherData.setCloudcover(Double.parseDouble(cloudcoverJsonArray.getString(i)));
+            rawWeatherData.setCloudcover(Integer.parseInt(cloudcoverJsonArray.getString(i)));
             rawWeatherData.setGust(Double.parseDouble(windgustsJsonArray.getString(i)));
             rawWeatherData.setHumidity(Double.parseDouble(humidityJsonArray.getString(i)));
             rawWeatherDataList.add(rawWeatherData);

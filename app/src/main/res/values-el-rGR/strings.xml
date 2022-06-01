@@ -38,4 +38,5 @@
     <string name="Precipitation">Βροχόπτωση</string>
     <string name="am">ΠΜ</string>
     <string name="pm">ΜΜ</string>
+    <string name="CloudCover">Συννεφιά</string>
 </resources>
