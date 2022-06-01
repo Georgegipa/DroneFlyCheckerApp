@@ -10,6 +10,18 @@
         <item>el</item>
     </string-array>
 
+    <string-array name="hour_entries" >
+        <item>@string/auto</item>
+        <item>@string/hr12</item>
+        <item>@string/hr24</item>
+    </string-array>
+
+    <string-array name="hour_entries_vals" >
+        <item>auto</item>
+        <item>12hr</item>
+        <item>24hr</item>
+    </string-array>
+
     <string-array name="wind_unit_entries" >
         <item>m/s</item>
         <item>km/h</item>

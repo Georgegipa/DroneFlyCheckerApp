@@ -37,10 +37,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (preference instanceof ListPreference) {
             //if it is listpreference cast preference to ListPreference
             ListPreference listPreference = (ListPreference) preference;
-            if (key.equals("pref_theme")) {
+            if (key.equals("pref_key_theme")) {
                 String theme = listPreference.getValue();
                 Helpers.setNewTheme(this.getActivity(), theme);
-            } else if (key.equals("pref_language")) {
+            } else if (key.equals("pref_key_language")) {
                 String language = listPreference.getValue();
                 this.getActivity().recreate();//recreate the activity to change the language
                 if (language.equals("en")) {
@@ -50,13 +50,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     //change language to greek
                     Helpers.setLocale(this.getActivity(), "el");
                 }
-            } else if (key.equals("pref_wind_unit")) {
+            } else if (key.equals("pref_key_wind_unit")) {
                 String windUnit = listPreference.getValue();
-                //TODO: change the wind unit support
+                Log.d(TAG, "unit changed to: " + windUnit);
+                Helpers.setWindSpeedUnit(this.getActivity(), windUnit);
 
-            } else if (key.equals("pref_temp_unit")) {
+            } else if (key.equals("pref_key_temperature_unit")) {
                 String tempUnit = listPreference.getValue();
-                //TODO: change the temperature unit  support
+                Helpers.setTemperatureUnit(this.getActivity(), tempUnit);
             }
 
         } else if (preference instanceof SwitchPreference) {

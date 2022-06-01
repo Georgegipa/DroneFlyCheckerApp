@@ -29,6 +29,8 @@
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".SettingsActivity" android:exported="true"
             android:parentActivityName=".MainActivity"/>
+        <activity android:name=".WeatherActivity" android:exported="true"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

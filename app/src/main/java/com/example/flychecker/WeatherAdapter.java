@@ -1,11 +1,9 @@
 package com.example.flychecker;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -80,7 +78,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         }
 
         public void bind(RawWeatherData weather, final OnItemClickListener listener) {
-            timeTv.setText(Helpers.convertUnixToDate(weather.getTime(), false));
+            timeTv.setText(Helpers.convertUnixToDate(weather.getTime()));
             bindIcon(weather);
             statusCv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -93,20 +91,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         private void bindIcon(RawWeatherData weather) {
             AnalyzeWeatherData analyzeWeatherData = new AnalyzeWeatherData(weather);
             Status status = analyzeWeatherData.checkAll();
-            switch (status) {
-                case SAFE:
-                    statusIv.setImageResource(R.drawable.ic_baseline_check_24);
-                    statusTv.setText(R.string.safe);
-                    break;
-                case CAUTION:
-                    statusIv.setImageResource(R.drawable.ic_baseline_warning_24);
-                    statusTv.setText(R.string.caution);
-                    break;
-                case DANGER:
-                    statusIv.setImageResource(R.drawable.ic_baseline_close_24);
-                    statusTv.setText(R.string.danger);
-                    break;
-            }
+            statusIv.setImageResource(Helpers.statusToIcon(status));
+            statusTv.setText(Helpers.statusToString(status));
         }
     }
 }

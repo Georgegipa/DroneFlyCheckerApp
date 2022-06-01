@@ -66,11 +66,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/status_icon" />
 
-
             </LinearLayout>
 
         </LinearLayout>
-
 
     </androidx.cardview.widget.CardView>
 

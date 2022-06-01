@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(RawWeatherData item) {
                         //TODO: navigate to detail activity
+                        Intent intent = new Intent(MainActivity.this, WeatherActivity.class);
+                        intent.putExtra("weather", item);
+                        startActivity(intent);
                     }
                 });
         mRecyclerView.setAdapter(adapter);
