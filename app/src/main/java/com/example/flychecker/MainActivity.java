@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -100,16 +101,18 @@ public class MainActivity extends AppCompatActivity {
         setPrevOptions();
         getLocation();
         setContentView(R.layout.activity_main2);
+        setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
         currentLocationTv.setText(currentLocationTv.getText() + cityName);
         mRecyclerView = findViewById(R.id.rv_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                layoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(mDividerItemDecoration);
-
-        adapter = new WeatherAdapter(this, rawWeatherDataList);
+        adapter = new WeatherAdapter(this, rawWeatherDataList,
+                new WeatherAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(RawWeatherData item) {
+                        //TODO: navigate to detail activity
+                    }
+                });
         mRecyclerView.setAdapter(adapter);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -122,17 +125,25 @@ public class MainActivity extends AppCompatActivity {
         getData();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     //generate the api url based on the location
+    @NonNull
     private String setURL(String timezoneID) {
         String apiURL = "https://api.open-meteo.com/v1/forecast";
-        String hourlyVariables = "hourly=temperature_2m,shortwave_radiation,precipitation,cloudcover,weathercode,windspeed_10m,windspeed_80m,windspeed_120m,windspeed_180m,windgusts_10m";
+        String hourlyVariables = "hourly=temperature_2m,relativehumidity_2m,shortwave_radiation,precipitation,cloudcover,weathercode,windspeed_10m,windspeed_80m,windspeed_120m,windspeed_180m,windgusts_10m";
         String timezone = "timezone=" + timezoneID;
         String poslat = "latitude=" + "37.9792";
         String poslon = "longitude=" + "23.7166";
         String timeformat = "timeformat=unixtime";
         String windunit = "windspeed_unit=ms";
         String dailyVariables = "daily=sunrise,sunset";
-        return apiURL + "?" + hourlyVariables + "&" + timezone + "&" + poslat + "&" + poslon + "&" + dailyVariables + "&" + timeformat + "&" + windunit;
+        String url = apiURL + "?" + hourlyVariables + "&" + timezone + "&" + poslat + "&" + poslon + "&" + dailyVariables + "&" + timeformat + "&" + windunit;
+        Log.d(TAG, "url: " + url);
+        return url;
     }
 
     //Check if there is internet connection
@@ -192,6 +203,8 @@ public class MainActivity extends AppCompatActivity {
         JSONArray windspeed_120mJsonArray = jsonObject.getJSONArray("windspeed_120m");
         JSONArray windgustsJsonArray = jsonObject.getJSONArray("windgusts_10m");
         JSONArray temperatureJsonArray = jsonObject.getJSONArray("temperature_2m");
+        JSONArray humidityJsonArray = jsonObject.getJSONArray("relativehumidity_2m");
+
         for (int i = 0; i < timeJsonArray.length(); i++) {
             //parse data
             RawWeatherData rawWeatherData = new RawWeatherData();
@@ -205,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
             rawWeatherData.setWeathercode(Integer.parseInt(weathercodeJsonArray.getString(i)));
             rawWeatherData.setCloudcover(Double.parseDouble(cloudcoverJsonArray.getString(i)));
             rawWeatherData.setGust(Double.parseDouble(windgustsJsonArray.getString(i)));
+            rawWeatherData.setHumidity(Double.parseDouble(humidityJsonArray.getString(i)));
             rawWeatherDataList.add(rawWeatherData);
         }
     }

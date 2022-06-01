@@ -5,36 +5,49 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
 
+
+    public interface OnItemClickListener {
+        //void onItemClick(String item);
+        void onItemClick(RawWeatherData item);
+    }
+
     private Context mContext;
     private LayoutInflater inflater;
     private List<RawWeatherData> rawWeatherDataList;
+    private View view;
+    private final OnItemClickListener listener;
 
-    public WeatherAdapter(Context context, List<RawWeatherData> weatherList) {
+
+    public WeatherAdapter(Context context, List<RawWeatherData> weatherList, OnItemClickListener listener) {
         inflater = LayoutInflater.from(context);
         this.mContext = context;
         this.rawWeatherDataList = weatherList;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public WeatherAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.list_item_row2, parent, false);
+        view = inflater.inflate(R.layout.modern_row, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull WeatherAdapter.ViewHolder holder, int position) {
-        holder.bind(rawWeatherDataList.get(position));
+        holder.bind(rawWeatherDataList.get(position), listener);
     }
 
     @Override
@@ -53,28 +66,47 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView timeTv;
-        private TextView windTv;
-        private TextView percipTv;
-        private TextView cloudcoverTv;
-        private TextView tempTv;
+        private ImageView statusIv;
+        private TextView statusTv;
+        private CardView statusCv;
 
         //constructor
         public ViewHolder(@NonNull View view) {
             super(view);
-            timeTv = (TextView) view.findViewById(R.id.tv_time);
-            windTv = (TextView) view.findViewById(R.id.tv_windinfo);
-            percipTv = (TextView) view.findViewById(R.id.tv_persipitation);
-            cloudcoverTv = (TextView) view.findViewById(R.id.tv_cloudcover);
-            tempTv = (TextView) view.findViewById(R.id.tv_temperature);
+            timeTv = view.findViewById(R.id.tv_time);
+            statusIv = view.findViewById(R.id.iv_status);
+            statusTv = view.findViewById(R.id.tv_status);
+            statusCv = view.findViewById(R.id.cv_status);
         }
-        @SuppressLint("SetTextI18n")
-        public void bind(RawWeatherData weather) {
 
-            timeTv.setText("Time:"+Helpers.convertUnixToDate(weather.getTime(),false));
-            windTv.setText("Wind Speed: "+weather.getWindSpeed10m()+"m/s");
-            percipTv.setText("Precipitation: "+weather.getPrecipitation()+"mm");
-            cloudcoverTv.setText("CloudCoverage:"+weather.getCloudcover()+"%");
-            tempTv.setText("Temperature:"+weather.getTemperature()+"°C");
+        public void bind(RawWeatherData weather, final OnItemClickListener listener) {
+            timeTv.setText(Helpers.convertUnixToDate(weather.getTime(), false));
+            bindIcon(weather);
+            statusCv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(weather);
+                }
+            });
+        }
+
+        private void bindIcon(RawWeatherData weather) {
+            AnalyzeWeatherData analyzeWeatherData = new AnalyzeWeatherData(weather);
+            Status status = analyzeWeatherData.checkAll();
+            switch (status) {
+                case SAFE:
+                    statusIv.setImageResource(R.drawable.ic_baseline_check_24);
+                    statusTv.setText(R.string.safe);
+                    break;
+                case CAUTION:
+                    statusIv.setImageResource(R.drawable.ic_baseline_warning_24);
+                    statusTv.setText(R.string.caution);
+                    break;
+                case DANGER:
+                    statusIv.setImageResource(R.drawable.ic_baseline_close_24);
+                    statusTv.setText(R.string.danger);
+                    break;
+            }
         }
     }
 }

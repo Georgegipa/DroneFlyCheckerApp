@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">FlyChecker</string>
-    <string name="app_description">An app designed to check if the current weather is suitable for UAV flying.</string>
+    <string name="safe_for_takeoff">Safe for takeoff?</string>
+    <string name="app_description">An app designed to check if the current weather is suitable for UAV takeoff.</string>
     <string name="app_author">George Papageorgiou</string>
     <string name="app_author_email" translatable="false">ice18390180@uniwa.gr</string>
     <string name="app_author_website" translatable="false"><a href="https://github.com/Georgegipa">Github.com</a></string>
@@ -27,4 +28,7 @@
     <string name="light">Light</string>
     <string name="auto">Auto</string>
     <string name="icons">Icons</string>
+    <string name="safe">Safe</string>
+    <string name="caution">Caution</string>
+    <string name="danger">Danger</string>
 </resources>

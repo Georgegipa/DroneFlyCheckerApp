@@ -25,4 +25,8 @@
     <string name="weather_api"><a href="https://open-meteo.com/">Δεδομένα καιρού απο Open-Meteo.com</a></string>
     <string name="icons_by"><a href="https://materialdesignicons.com/">Τα εικονίδια παρέχονται από MaterialDesignIcons</a></string>
     <string name="icons">Εικονίδια</string>
+    <string name="safe">Ασφαλής</string>
+    <string name="caution">Προσοχή</string>
+    <string name="danger">Κίνδυνος</string>
+    <string name="safe_for_takeoff">Ασφαλής απογείωση;</string>
 </resources>
