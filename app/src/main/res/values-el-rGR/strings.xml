@@ -36,4 +36,6 @@
     <string name="Gusts">Ριπές</string>
     <string name="Wind">Αέρας</string>
     <string name="Precipitation">Βροχόπτωση</string>
+    <string name="am">ΠΜ</string>
+    <string name="pm">ΜΜ</string>
 </resources>

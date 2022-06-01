@@ -23,7 +23,7 @@ public class WeatherActivity extends AppCompatActivity {
             AnalyzeWeatherData analyzeWeatherData = new AnalyzeWeatherData(weather);
             Status status = analyzeWeatherData.checkAll();
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(Helpers.convertUnixToDate(weather.getTime()));
+            getSupportActionBar().setTitle(Helpers.convertUnixToDate(this,weather.getTime()));
             //change color to action bar
 //            getSupportActionBar().setBackgroundDrawable(
 //                    new ColorDrawable(getResources().getColor(Helpers.statusToColor(status))));

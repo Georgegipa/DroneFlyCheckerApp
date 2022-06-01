@@ -38,5 +38,7 @@
     <string name="Gusts">Gusts</string>
     <string name="Wind">Wind</string>
     <string name="Precipitation">Precipitation</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
 
 </resources>

@@ -18,8 +18,8 @@
 
     <string-array name="hour_entries_vals" >
         <item>auto</item>
-        <item>12hr</item>
-        <item>24hr</item>
+        <item>12h</item>
+        <item>24h</item>
     </string-array>
 
     <string-array name="wind_unit_entries" >

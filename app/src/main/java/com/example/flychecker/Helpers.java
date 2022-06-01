@@ -9,25 +9,13 @@ import android.content.res.Resources;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import java.util.Locale;
 
 //Helper functions to avoid code repetition
 public abstract class Helpers {
-
-    //convert unix timestamp to time with date
-    public static String convertUnixToDate(int unixTime) {
-        java.util.Date date = new java.util.Date(unixTime * 1000L);
-        //change hour to 12 hour format
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
-        sdf.setTimeZone(java.util.TimeZone.getDefault());
-
-        //concat amPm to the end
-        String formatted = sdf.format(date);
-        //TODO: get amPm from the locale and system
-
-        return formatted;
-    }
+    final int[] time = {R.string.am, R.string.pm};
 
     //change app language
     public static void setLocale(Activity activity, String languageCode) {
@@ -107,13 +95,60 @@ public abstract class Helpers {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
     }
 
+
+    //check if unixtime is in the future
+    public static boolean isFuture(long unixtime) {
+        return unixtime > System.currentTimeMillis() / 1000;
+    }
+
+    //check if unixtime is within the last hour
+    public static boolean isLastHour(long unixtime) {
+        return unixtime > System.currentTimeMillis() / 1000 - 3600;
+    }
+
+    //convert unix timestamp to time with date
+    public static String convertUnixToDate(Context context, int unixTime) {
+        java.util.Date date = new java.util.Date(unixTime * 1000L);
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+        sdf.setTimeZone(java.util.TimeZone.getDefault());
+        String formattedDate = sdf.format(date).split(" ")[0];
+        String time = sdf.format(date).split(" ")[1];
+        String timeFormat = getTimeFormat(context);
+        if (timeFormat.equals("12h")) {
+            formattedDate += " " + convertTo12h(context, time);
+        } else
+            formattedDate += " " + time;
+        Log.d("formattedDate", formattedDate);
+        return formattedDate;
+    }
+
+    //convert a 24hr time to 12hr time (12:00 -> 12:00 PM)
+    private static String convertTo12h(Context context, String time) {
+        String[] timeSplit = time.split(":");
+        int hour = Integer.parseInt(timeSplit[0]);
+        context.getString(R.string.am);
+        String amPm = "";
+        if (hour > 12) {
+            hour -= 12;
+            amPm = context.getString(R.string.pm);
+        } else if (hour == 12) {
+            amPm = context.getString(R.string.pm);
+        } else if (hour == 0) {
+            hour = 12;
+            amPm = context.getString(R.string.am);
+        } else {
+            amPm = context.getString(R.string.am);
+        }
+        return hour + ":" + timeSplit[1] + " " + amPm;
+    }
+
     //get the system time format
-    public static String getTimeFormat(Activity activity) {
-        SharedPreferences prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE);
+    private static String getTimeFormat(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         if (prefs.contains("time_format")) {
             return prefs.getString("time_format", "");
         } else {
-            return DateFormat.is24HourFormat(activity) ? "24" : "12";
+            return DateFormat.is24HourFormat(context) ? "24h" : "12h";
         }
     }
 
@@ -132,7 +167,7 @@ public abstract class Helpers {
         }
         prefs.apply();
     }
-    
+
     public static String getTemperatureUnit(Activity activity, double ms) {
         SharedPreferences prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE);
         String temp = prefs.getString("temperature_unit", "");
@@ -148,7 +183,6 @@ public abstract class Helpers {
         } else
             return ms + "°C";
     }
-
 
     public static void setTemperatureUnit(Activity activity, String temperatureUnit) {
         SharedPreferences.Editor prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();

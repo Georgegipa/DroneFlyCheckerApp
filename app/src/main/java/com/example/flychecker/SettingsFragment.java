@@ -52,12 +52,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 }
             } else if (key.equals("pref_key_wind_unit")) {
                 String windUnit = listPreference.getValue();
-                Log.d(TAG, "unit changed to: " + windUnit);
+
                 Helpers.setWindSpeedUnit(this.getActivity(), windUnit);
 
             } else if (key.equals("pref_key_temperature_unit")) {
                 String tempUnit = listPreference.getValue();
                 Helpers.setTemperatureUnit(this.getActivity(), tempUnit);
+            }
+            else if(key.equals("pref_key_hour_format")){
+                String hourFormat = listPreference.getValue();
+                Helpers.setTimeFormat(this.getActivity(), hourFormat);
             }
 
         } else if (preference instanceof SwitchPreference) {

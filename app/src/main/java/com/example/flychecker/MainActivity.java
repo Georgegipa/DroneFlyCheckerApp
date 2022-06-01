@@ -211,7 +211,11 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < timeJsonArray.length(); i++) {
             //parse data
             RawWeatherData rawWeatherData = new RawWeatherData();
-            rawWeatherData.setTime(Integer.parseInt(timeJsonArray.getString(i)));
+            int unixTime = Integer.parseInt(timeJsonArray.getString(i));
+            //keep only the last hour and future hours
+            if(!Helpers.isFuture(unixTime) && !Helpers.isLastHour(unixTime))
+                continue;
+            rawWeatherData.setTime(unixTime);
             rawWeatherData.setPrecipitation(Double.parseDouble(precipitationJsonArray.getString(i)));
             rawWeatherData.setTemperature(Double.parseDouble(temperatureJsonArray.getString(i)));
             rawWeatherData.setWindSpeed10m(Double.parseDouble(windspeed_10mJsonArray.getString(i)));
@@ -271,5 +275,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
 }

@@ -78,7 +78,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         }
 
         public void bind(RawWeatherData weather, final OnItemClickListener listener) {
-            timeTv.setText(Helpers.convertUnixToDate(weather.getTime()));
+            timeTv.setText(Helpers.convertUnixToDate(mContext,weather.getTime()));
             bindIcon(weather);
             statusCv.setOnClickListener(new View.OnClickListener() {
                 @Override
