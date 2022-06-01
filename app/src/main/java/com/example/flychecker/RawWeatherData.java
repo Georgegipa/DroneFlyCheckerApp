@@ -15,7 +15,6 @@ public class RawWeatherData implements Parcelable {
     private int weathercode;
     private double humidity;
 
-
     public int getTime() {
         return unixtime;
     }
@@ -31,7 +30,6 @@ public class RawWeatherData implements Parcelable {
     public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
-
 
     public double getPrecipitation() {
         return precipitation;

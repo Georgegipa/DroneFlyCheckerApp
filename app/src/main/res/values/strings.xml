@@ -41,5 +41,15 @@
     <string name="CloudCover">Cloudiness</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
-
+<!--    app warnings and dangers-->
+    <string name="low_temperature_caution">Low temperature detected</string>
+    <string name="high_temperature_caution">High temperature detected</string>
+    <string name="temperature_danger">Temperature out of the recommended operating range</string>
+    <string name="precipitation_caution">Precipitation is low, but it is possible that it will rain soon</string>
+    <string name="precipitation_danger">Precipitation is high, high risk of rain</string>
+    <string name="humidity_caution">High humidity, try avoid flying in the current environment</string>
+    <string name="cloud_cover_caution">Cloudy weather, visibility may be limited</string>
+    <string name="cloud_cover_danger">Extremely cloudy weather, low visibility and possible rain or snow</string>
+    <string name="gust_caution">High wind speed, try avoid flying in the current environment</string>
+    <string name="gust_danger">Current wind speeds are too high to allow drone returning home.</string>
 </resources>

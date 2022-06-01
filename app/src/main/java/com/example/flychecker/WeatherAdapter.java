@@ -89,7 +89,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         }
 
         private void bindIcon(RawWeatherData weather) {
-            AnalyzeWeatherData analyzeWeatherData = new AnalyzeWeatherData(weather);
+            AnalyzeWeatherData analyzeWeatherData = new AnalyzeWeatherData(mContext,weather);
             Status status = analyzeWeatherData.checkAll();
             statusIv.setImageResource(Helpers.statusToIcon(status));
             statusTv.setText(Helpers.statusToString(status));

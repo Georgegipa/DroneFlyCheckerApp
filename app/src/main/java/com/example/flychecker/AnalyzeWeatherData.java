@@ -1,5 +1,6 @@
 package com.example.flychecker;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -10,11 +11,14 @@ public class AnalyzeWeatherData {
 
     private RawWeatherData weather;
     private double maxDroneSpeed;
+    private Context context;
 
-    AnalyzeWeatherData(RawWeatherData weather) {
+    AnalyzeWeatherData(Context context,RawWeatherData weather) {
         this.weather = weather;
+        this.context = context;
         maxDroneSpeed = 13;//TODO: get max drone speed from settings
     }
+
     //check if the temperature is safe
     public Status checkTemperature() {
         //temp is in Celsius
@@ -30,10 +34,25 @@ public class AnalyzeWeatherData {
             status = Status.DANGER;
         return status;
     }
-    //check if current time is night or day
-    private Status checkTime() {
-        //throw not implemented yet exception
-        return Status.SAFE;
+
+    public String getTemperatureSummary() {
+        Status status = checkTemperature();
+        String summary = "";
+        double temp = weather.getTemperature();
+        switch (status) {
+            default:
+                break;
+            case CAUTION:
+                if(temp > 0 && temp <= 5)
+                    summary= context.getString(R.string.low_temperature_caution);
+                else
+                    summary = context.getString(R.string.high_temperature_caution);
+                break;
+            case DANGER:
+                    summary= context.getString(R.string.temperature_danger);
+                break;
+        }
+        return summary;
     }
 
     public Status[] checkWindSpeeds() {
@@ -55,6 +74,30 @@ public class AnalyzeWeatherData {
         return status;
     }
 
+    public Status checkAllWindSpeeds() {
+        Status status = Status.SAFE;
+        //loop through all wind speeds and get the highest status
+        for(Status s: checkWindSpeeds()) {
+            if(s.ordinal() > status.ordinal()) {
+                status = s;
+            }
+        }
+        return status;
+    }
+
+    public String getWindSpeedsSummary() {
+
+        switch (checkAllWindSpeeds())
+        {
+            case CAUTION:
+                return "Wind speed may effect flight";
+            case DANGER:
+                return "Wind speeds are too high, avoid flying at this time";
+            default:
+                return "";
+        }
+    }
+
     public Status checkPrecipitation() {
         double precip = weather.getPrecipitation();
         Status status;
@@ -68,6 +111,17 @@ public class AnalyzeWeatherData {
         return status;
     }
 
+    public String getPrecipitationSummary() {
+        switch (checkPrecipitation()) {
+            default:
+                return "";
+            case CAUTION:
+                return context.getString(R.string.precipitation_caution);
+            case DANGER:
+                return context.getString(R.string.precipitation_danger);
+        }
+    }
+
     public Status checkHumidity() {
         double humidity = weather.getHumidity();
         Status status;
@@ -76,6 +130,14 @@ public class AnalyzeWeatherData {
         else
             status = Status.SAFE;
         return status;
+    }
+
+    public String getHumiditySummary()
+    {
+        if (checkHumidity() == Status.CAUTION) {
+            return context.getString(R.string.humidity_caution);
+        }
+        return "";
     }
 
     public Status checkCloudCover() {
@@ -88,6 +150,18 @@ public class AnalyzeWeatherData {
         else
             status = Status.SAFE;
         return status;
+    }
+
+    public String getCloudCoverSummary()
+    {
+        switch (checkCloudCover()) {
+            case CAUTION:
+                return context.getString(R.string.cloud_cover_caution);
+            case DANGER:
+                return context.getString(R.string.cloud_cover_danger);
+            default:
+                return "";
+        }
     }
 
     public Status checkGust() {
@@ -103,10 +177,21 @@ public class AnalyzeWeatherData {
         return status;
     }
 
+    public String getGustSummary()
+    {
+        switch (checkGust()) {
+            case CAUTION:
+                return context.getString(R.string.gust_caution);
+            case DANGER:
+                return context.getString(R.string.gust_danger);
+            default:
+                return "";
+        }
+    }
+
     public Status checkAll() {
         List<Status> statusList = new ArrayList<>(Arrays.asList(checkWindSpeeds()));
         statusList.add(checkTemperature());
-        statusList.add(checkTime());
         statusList.add(checkPrecipitation());
         statusList.add(checkHumidity());
         statusList.add(checkCloudCover());

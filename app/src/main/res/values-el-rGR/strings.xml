@@ -39,4 +39,14 @@
     <string name="am">ΠΜ</string>
     <string name="pm">ΜΜ</string>
     <string name="CloudCover">Συννεφιά</string>
+    <string name="low_temperature_caution">Εντοπίστηκε χαμηλή θερμοκρασία</string>
+    <string name="high_temperature_caution">Εντοπίστηκε υψηλή θερμοκρασία</string>
+    <string name="temperature_danger">Θερμοκρασία εκτός του συνιστώμενου εύρους λειτουργίας</string>
+    <string name="precipitation_caution">Η βροχόπτωση είναι χαμηλή, αλλά είναι πιθανό να βρέξει σύντομα</string>
+    <string name="precipitation_danger">Η βροχόπτωση είναι υψηλή, υψηλός κίνδυνος βροχής</string>
+    <string name="humidity_caution">Υψηλή υγρασία, προσπαθήστε να αποφύγετε να πετάτε στο τρέχον περιβάλλον</string>
+    <string name="cloud_cover_caution">Συννεφιασμένος καιρός, η ορατότητα ενδέχεται να είναι περιορισμένη</string>
+    <string name="cloud_cover_danger">Εξαιρετικά συννεφιασμένος καιρός, χαμηλή ορατότητα και πιθανή βροχή ή χιόνι</string>
+    <string name="gust_caution">Υψηλή ταχύτητα ανέμου, προσπαθήστε να αποφύγετε να πετάτε στο τρέχον περιβάλλον</string>
+    <string name="gust_danger">Οι τρέχουσες ταχύτητες ανέμου είναι πολύ υψηλές για να επιτρέψουν το drone να επιστρέψει στο σπίτι.</string>
 </resources>
