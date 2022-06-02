@@ -7,27 +7,22 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.format.DateFormat;
 
+import androidx.fragment.app.FragmentActivity;
+
 import java.util.Locale;
 
 public abstract class PreferencesHelpers {
-    //change app language
-    //TODO:cleanup this code
-    public static void setLocale(Context context, String languageCode) {
+
+    public static void setLanguage(Context context, String languageCode) {
         SharedPreferences.Editor editor = context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
         editor.putString("language", languageCode);
         editor.apply();
-        Locale locale = new Locale(languageCode);
-        Locale.setDefault(locale);
-        Resources resources = context.getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     //get app language
     public static String getLanguage(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
-        return prefs.getString("language", "");
+        return prefs.getString("language", "en");
     }
 
     public static String getTemperatureUnit(Context context, double ms) {
@@ -87,17 +82,6 @@ public abstract class PreferencesHelpers {
         prefs.apply();
     }
 
-    //get the system time format
-//    public static String getTimeFormat(Context context) {
-//        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
-//        if (prefs.contains("time_format")) {
-//            return prefs.getString("time_format", "");
-//        } else {
-//            return DateFormat.is24HourFormat(context) ? "24h" : "12h";
-//        }
-//    }
-
-    //12hr
     public static boolean is24HourFormat(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         return prefs.getBoolean("time_format",DateFormat.is24HourFormat(context));
@@ -119,23 +103,6 @@ public abstract class PreferencesHelpers {
         prefs.apply();
     }
 
-
-//    public static void setTimeFormat(Context context, String timeFormat) {
-//        SharedPreferences.Editor prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
-//        switch (timeFormat) {
-//            case "12h":
-//                prefs.putString("time_format", "12h");
-//                break;
-//            case "24h":
-//                prefs.putString("time_format", "24h");
-//                break;
-//            default:
-//                prefs.putString("time_format", DateFormat.is24HourFormat(context) ? "24h" : "12h");
-//                break;
-//        }
-//        prefs.apply();
-//    }
-
     public static boolean getDroneWaterproof(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         return prefs.getBoolean("drone_waterproof", false);
@@ -144,6 +111,17 @@ public abstract class PreferencesHelpers {
     public static void setDroneWaterproof(Context context, boolean isWaterproof) {
         SharedPreferences.Editor prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
         prefs.putBoolean("drone_waterproof", isWaterproof);
+        prefs.apply();
+    }
+
+    public static int getMaxSpeed(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        return prefs.getInt("max_speed", 15);
+    }
+
+    public static void setMaxSpeed(FragmentActivity activity, int windSpeed) {
+        SharedPreferences.Editor prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
+        prefs.putInt("max_speed", windSpeed);
         prefs.apply();
     }
 }

@@ -41,13 +41,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             } else if (key.equals("pref_key_language")) {
                 String language = listPreference.getValue();
                 this.getActivity().recreate();//recreate the activity to change the language
-                if (language.equals("en")) {
-                    //change language to english
-                    PreferencesHelpers.setLocale(this.getActivity(), "en");
-                } else if (language.equals("el")) {
-                    //change language to greek
-                    PreferencesHelpers.setLocale(this.getActivity(), "el");
-                }
+                PreferencesHelpers.setLanguage(this.getActivity(), language);
+                Helpers.setLocale(this.getActivity());
             } else if (key.equals("pref_key_wind_unit")) {
                 String windUnit = listPreference.getValue();
 
@@ -67,6 +62,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 PreferencesHelpers.setDroneWaterproof(this.getActivity(), waterproof);
             }
         } else if (preference instanceof SeekBarPreference) {
+            if (key.equals("pref_key_max_speed")) {
+                int windSpeed = sharedPreferences.getInt("pref_key_max_speed", 15);
+                //TODO: fix min value on seekbar
+                if(windSpeed > 5)
+                    PreferencesHelpers.setMaxSpeed(this.getActivity(), windSpeed);
+                else
+                    sharedPreferences.edit().putInt("pref_key_max_speed", 5).apply();
+            }
         }
     }
 

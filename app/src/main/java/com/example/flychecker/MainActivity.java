@@ -4,7 +4,6 @@ package com.example.flychecker;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -109,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 new WeatherAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(RawWeatherData item) {
-                        //TODO: navigate to detail activity
                         Intent intent = new Intent(MainActivity.this, WeatherActivity.class);
                         intent.putExtra("weather", item);
                         startActivity(intent);
@@ -230,10 +228,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setPrevOptions() {
-        //TODO:clean up this mess
-        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
-        String lang = sharedPref.getString("language", "");
-        PreferencesHelpers.setLocale(this, lang);
+        Helpers.setLocale(this);
         Helpers.setPrevTheme(this);
     }
 

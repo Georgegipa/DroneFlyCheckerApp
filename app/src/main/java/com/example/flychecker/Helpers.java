@@ -3,8 +3,12 @@ package com.example.flychecker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 
 import androidx.appcompat.app.AppCompatDelegate;
+
+import java.util.Locale;
 
 //Helper functions to avoid code repetition
 public abstract class Helpers {
@@ -113,4 +117,13 @@ public abstract class Helpers {
         return hour + ":" + timeSplit[1] + " " + amPm;
     }
 
+    //change app language
+    public static void setLocale(Context context) {
+        Locale locale = new Locale(PreferencesHelpers.getLanguage(context));
+        Locale.setDefault(locale);
+        Resources resources = context.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
+    }
 }

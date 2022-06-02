@@ -10,13 +10,13 @@ import java.util.List;
 public class AnalyzeWeatherData {
 
     private RawWeatherData weather;
-    private double maxDroneSpeed;
+    private int maxDroneSpeed;
     private Context context;
 
     AnalyzeWeatherData(Context context,RawWeatherData weather) {
         this.weather = weather;
         this.context = context;
-        maxDroneSpeed = 13;//TODO: get max drone speed from settings
+        maxDroneSpeed = PreferencesHelpers.getMaxSpeed(context);
     }
 
     //check if the temperature is safe
@@ -97,12 +97,11 @@ public class AnalyzeWeatherData {
                 return "";
         }
     }
-
+    //TODO: check for drone water resistance
     public Status checkPrecipitation() {
         double precip = weather.getPrecipitation();
         Status status;
-        //TODO: ask user if they have a waterproof drone
-        Log.d("waterproof", "waterproof: " + PreferencesHelpers.getDroneWaterproof(context));
+
         if(precip > 0 && precip < 1.0)
             status = Status.CAUTION;
         else if(precip >= 1.0 && precip < 2.0)
