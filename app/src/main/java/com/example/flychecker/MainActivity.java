@@ -3,17 +3,15 @@ package com.example.flychecker;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +32,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -49,6 +49,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int PERMISSION_FINE_LOCATION = 99;
 
     private List<RawWeatherData> rawWeatherDataList = new ArrayList();
 
@@ -56,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
     private WeatherAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private double latitude, longitude;
-    private String cityName;
+    private String city;
     private TextView currentLocationTv;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private boolean isLocationPermissionGranted = false;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setPrevOptions();
-        getLocation();
+        updateGPS();
         //wait for location to be found
         setContentView(R.layout.activity_main2);
         setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
-        currentLocationTv.setText(currentLocationTv.getText() + cityName);
+
         mRecyclerView = findViewById(R.id.rv_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new WeatherAdapter(this, rawWeatherDataList,
@@ -125,15 +129,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 // Refresh items
-                getData();
+                if(isLocationPermissionGranted)
+                    getData();
             }
         });
-        getData();
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSION_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    updateGPS();
+                    break;
+                }
+                else{
+                    //permission denied
+                    //create a snackbar to inform user and ask for permission
+                    Snackbar.make(findViewById(R.id.mainview),
+                            "Location permission is required to get weather data",
+                            Snackbar.LENGTH_LONG)
+                            .setAction("Allow", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        PERMISSION_FINE_LOCATION);
+                                }
+                            })
+                            .show();
+                }
+        }
     }
 
     //generate the api url based on the location
@@ -253,41 +286,41 @@ public class MainActivity extends AppCompatActivity {
         Helpers.setPrevTheme(this);
     }
 
-    private void getLocation() {
-        //request location permission
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION
-                , Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
-        //TODO:check if location is enabled
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //TODO: bother the user to enable location
-
-        } else {
-            LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            boolean network_enabled = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            Location location;
-            if (network_enabled) {
-
-                location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                if (location != null) {
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
+    private void updateGPS() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //permission granted
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        //permission granted now get the location
+                        getLocation(location);
+                    }
                 }
-            }
-            //use geocoder to get the city name
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            try {
-                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                if (addresses.size() > 0) {
-                    cityName = addresses.get(0).getLocality();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //display a toast message with all of the data
-            Toast.makeText(this, "Longitude: " + longitude + "\nLatitude: " + latitude + "\nCity: " + cityName, Toast.LENGTH_LONG).show();
+            });
+        }
+        else {
+            //permission not granted
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
         }
     }
 
+    private void getLocation(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        //use geocoder to get the city name
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                city = addresses.get(0).getLocality();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        currentLocationTv.setText(currentLocationTv.getText() + city);
+        getData();
+
+    }
 }
