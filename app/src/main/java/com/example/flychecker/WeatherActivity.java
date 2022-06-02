@@ -19,7 +19,7 @@ public class WeatherActivity extends AppCompatActivity {
         if(intent.hasExtra("weather")) {
             RawWeatherData weather = intent.getParcelableExtra("weather");
             setContentView(R.layout.activity_weather);
-            AnalyzeWeatherData wd = new AnalyzeWeatherData(this,weather);
+            WeatherAnalyzer wd = new WeatherAnalyzer(this,weather);
             Status status = wd.checkAll();
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Helpers.convertUnixToDate(this,weather.getTime()));

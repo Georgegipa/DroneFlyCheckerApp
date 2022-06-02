@@ -110,10 +110,18 @@ public class MainActivity extends AppCompatActivity {
         Helpers.setPrevTheme(this);
         setupGUI();
         locator = new Locator(this);
+        swipeRefreshLayout.setRefreshing(false);
+        //wait for location to load before getting data
+        
+
+        //wait for location response
+
         //failed to get location from GPS and last known location
         if(!locator.prevLocationExists() && !locator.isLocationEnabled())
             exitAlert("Unable to get location","Try to enabling gps and try again!");
         getData();
+        //toast message that oncreate is called
+        Toast.makeText(this, "onCreate() called", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -126,12 +134,14 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //the user has selected the location permission
-        if (requestCode == Locator.PERMISSION_FINE_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+        int locper = Locator.PERMISSION_FINE_LOCATION;
+        if (requestCode == locper ) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //permission granted
                 getData();
             } else {
-                //create an alertdialog to inform user and then exit the app
-                exitAlert("Location Permission Denied","Please allow location permission and restart the app");
+                //permission denied
+                exitAlert("Permission denied", "You have denied the permission to access your location.");
             }
         }
     }

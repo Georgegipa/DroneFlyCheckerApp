@@ -33,7 +33,7 @@
     <string name="time_format">Μορφή Ώρας</string>
     <string name="Temperature">Θερμοκρασία</string>
     <string name="Humidity">Υγρασία</string>
-    <string name="Gusts">Ριπές</string>
+    <string name="Gusts">Ριπές αέρα</string>
     <string name="Wind">Αέρας</string>
     <string name="Precipitation">Βροχόπτωση</string>
     <string name="am">ΠΜ</string>
@@ -45,10 +45,10 @@
     <string name="precipitation_caution">Η βροχόπτωση είναι χαμηλή, αλλά είναι πιθανό να βρέξει σύντομα</string>
     <string name="precipitation_danger">Η βροχόπτωση είναι υψηλή, υψηλός κίνδυνος βροχής</string>
     <string name="humidity_caution">Υψηλή υγρασία, προσπαθήστε να αποφύγετε να πετάτε στο τρέχον περιβάλλον</string>
-    <string name="cloud_cover_caution">Συννεφιασμένος καιρός, η ορατότητα ενδέχεται να είναι περιορισμένη</string>
-    <string name="cloud_cover_danger">Εξαιρετικά συννεφιασμένος καιρός, χαμηλή ορατότητα και πιθανή βροχή ή χιόνι</string>
-    <string name="gust_caution">Υψηλή ταχύτητα ανέμου, προσπαθήστε να αποφύγετε να πετάτε στο τρέχον περιβάλλον</string>
-    <string name="gust_danger">Οι τρέχουσες ταχύτητες ανέμου είναι πολύ υψηλές για να επιτρέψουν το drone να επιστρέψει στο σπίτι.</string>
+    <string name="cloud_cover_caution">Πολύ συννεφιασμένος καιρός, περιορισμένη ορατότητα και κάλυψη σήματος ενδέχεται να επηρεάσουν την ομαλή  λειτουργία.</string>
+    <string name="cloud_cover_danger">Kαιρός με συννεφιά μπορεί να επηρεάσει την κάλυψη σήματος και την ορατότητα.</string>
+    <string name="gust_caution">Υψηλή ριπές αέρα μπορούν να επηρεάσουν αρνητικά  τον ομαλό απομακρυσμένο έλεγχο του drone.</string>
+    <string name="gust_danger">Οι τρέχουσες ριπές ανέμου μπορεί να επιβραδύνουν την ταχύτητα του drone και να έχουν σοβαρό αντίκτυπο στη διάρκεια ζωής της μπαταρίας του.</string>
     <string name="waterproof">Αδιάβροχο</string>
     <string name="no_internet">Δεν υπάρχει σύνδεση</string>
     <string name="request_failed">Το αίτημα απέτυχε</string>

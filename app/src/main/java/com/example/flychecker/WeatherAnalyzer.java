@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AnalyzeWeatherData {
+public class WeatherAnalyzer {
 
     private RawWeatherData weather;
     private int maxDroneSpeed;
     private Context context;
 
-    AnalyzeWeatherData(Context context,RawWeatherData weather) {
+    WeatherAnalyzer(Context context, RawWeatherData weather) {
         this.weather = weather;
         this.context = context;
         maxDroneSpeed = PreferencesHelpers.getMaxSpeed(context);
@@ -143,7 +143,7 @@ public class AnalyzeWeatherData {
     public Status checkCloudCover() {
         int cloudCover = weather.getCloudcover();
         Status status;
-        if( cloudCover > 50 && cloudCover <90)//very cloudy
+        if( cloudCover > 70 && cloudCover <90)//very cloudy
             status = Status.CAUTION;
         else  if (cloudCover >= 90)// extremely cloudy
             status = Status.DANGER;
@@ -167,10 +167,9 @@ public class AnalyzeWeatherData {
     public Status checkGust() {
         double gust = weather.getGust();
         Status status;
-        //if gust is higher than 2/3 of max speed
-        if(gust > maxDroneSpeed * 2/3)
+        if(gust > maxDroneSpeed)
             status = Status.DANGER;
-        else if(gust > maxDroneSpeed / 2)
+        else if(gust > maxDroneSpeed * (double)3/4)
             status = Status.CAUTION;
         else
             status = Status.SAFE;
@@ -204,6 +203,11 @@ public class AnalyzeWeatherData {
                 finalStatus = Status.CAUTION;
         }
         return finalStatus;
+    }
+
+    //use humidity, cloud cover and perciptation to determine the possibility of raining
+    public boolean isRaining() {
+        return true;
     }
 
 }
