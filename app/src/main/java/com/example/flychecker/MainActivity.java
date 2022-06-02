@@ -3,6 +3,7 @@ package com.example.flychecker;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -12,14 +13,17 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +35,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setPrevOptions();
         getLocation();
+        //wait for location to be found
         setContentView(R.layout.activity_main2);
         setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
@@ -160,7 +166,13 @@ public class MainActivity extends AppCompatActivity {
         if (!isNetworkAvailable()) {
             //display a toast message if there is no internet connection
             //TODO: display a better message when there is no internet connection
-            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.mainview), getString(R.string.no_internet), Snackbar.LENGTH_LONG)
+                    .setAction("Retry", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getData();
+                        }
+                    }).show();
             return;
         }
         //TODO:configure cache
@@ -187,6 +199,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
+                swipeRefreshLayout.setRefreshing(false);
+                //set snackbar to show error
+                Snackbar.make(findViewById(R.id.mainview), getString(R.string.request_failed), Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getData();
+                            }
+                        }).show();
             }
         });
         AppController.getInstance().addToRequestQueue(weatherReq);
@@ -210,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
             RawWeatherData rawWeatherData = new RawWeatherData();
             int unixTime = Integer.parseInt(timeJsonArray.getString(i));
             //keep only the last hour and future hours
-            if(!Helpers.isFuture(unixTime) && !Helpers.isLastHour(unixTime))
+            if (!Helpers.isFuture(unixTime) && !Helpers.isLastHour(unixTime))
                 continue;
             rawWeatherData.setTime(unixTime);
             rawWeatherData.setPrecipitation(Double.parseDouble(precipitationJsonArray.getString(i)));
@@ -267,9 +288,6 @@ public class MainActivity extends AppCompatActivity {
             //display a toast message with all of the data
             Toast.makeText(this, "Longitude: " + longitude + "\nLatitude: " + latitude + "\nCity: " + cityName, Toast.LENGTH_LONG).show();
         }
-
-
     }
-
 
 }

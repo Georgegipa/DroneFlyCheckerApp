@@ -50,4 +50,6 @@
     <string name="gust_caution">Υψηλή ταχύτητα ανέμου, προσπαθήστε να αποφύγετε να πετάτε στο τρέχον περιβάλλον</string>
     <string name="gust_danger">Οι τρέχουσες ταχύτητες ανέμου είναι πολύ υψηλές για να επιτρέψουν το drone να επιστρέψει στο σπίτι.</string>
     <string name="waterproof">Αδιάβροχο</string>
+    <string name="no_internet">Δεν υπάρχει σύνδεση</string>
+    <string name="request_failed">Το αίτημα απέτυχε</string>
 </resources>
