@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,8 +53,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
-
     private List<RawWeatherData> rawWeatherDataList = new ArrayList();
 
     private RecyclerView mRecyclerView;
@@ -63,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private double latitude, longitude;
     private CardView topCv;
     private String city;
-    private boolean isLocationPermissionGranted = false;
     private Locator locator;
 
     @Override
@@ -108,7 +106,39 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setPrevOptions();
+        Helpers.setLocale(this);
+        Helpers.setPrevTheme(this);
+        setupGUI();
+        locator = new Locator(this);
+        //failed to get location from GPS and last known location
+        if(!locator.prevLocationExists() && !locator.isLocationEnabled())
+            exitAlert("Unable to get location","Try to enabling gps and try again!");
+        getData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    //this method is called when the user accepts or denies a permission
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //the user has selected the location permission
+        if (requestCode == Locator.PERMISSION_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                getData();
+            } else {
+                //create an alertdialog to inform user and then exit the app
+                exitAlert("Location Permission Denied","Please allow location permission and restart the app");
+            }
+        }
+    }
+
+    //gui functions
+    private void setupGUI()
+    {
         setContentView(R.layout.activity_main2);
         setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
@@ -130,42 +160,46 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 // Refresh items
-                    getData();
+                getData();
             }
         });
-        locator = new Locator(this);
-        updateUI();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    //this method is called when the user accepts or denies a permission
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //the user has selected the location permission
-        if (requestCode == Locator.PERMISSION_FINE_LOCATION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                updateUI();
-            } else {
-                //permission denied
-                //create an alertdialog to inform user and then exit the app
-                new AlertDialog.Builder(this)
-                        .setTitle("Location Permission Denied")
-                        .setMessage("Please allow location permission and restart the app")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finish();
-                            }
-                        })
-                        .create()
-                        .show();
-            }
+    private void updateUI()
+    {
+        locator.updateGPS();
+        latitude = locator.getLatitude();
+        longitude = locator.getLongitude();
+        city = locator.getCity();
+        Log.d(TAG, "updateUI: " + city);
+        //geocoder failed to find city
+        if (TextUtils.isEmpty(city)) {//check if city is empty or null
+            Snackbar.make(findViewById(R.id.main_view), "Unable to find locations city name", Snackbar.LENGTH_LONG).show();
+            topCv.setVisibility(View.GONE);//hide the top card view if the city name is not found
         }
+        else {
+            topCv.setVisibility(View.VISIBLE);
+            currentLocationTv.setText(city);
+        }
+        if(locator.prevLocationLoaded())
+        {
+            Snackbar.make(findViewById(R.id.main_view), "Unable to retrieve latest gps location loading latest known position", Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    private void exitAlert(String title,String message)
+    {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .create()
+                .show();
     }
 
     //generate the api url based on the location
@@ -195,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
     //make the api call and load the data
     private void getData() {
         //get timezone from the device
+        updateUI();
         if (!isNetworkAvailable()) {
             //display a snackbar if there is no internet connection with a retry button
             Snackbar.make(findViewById(R.id.main_view), getString(R.string.no_internet), Snackbar.LENGTH_LONG)
@@ -279,26 +314,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setPrevOptions() {
-        Helpers.setLocale(this);
-        Helpers.setPrevTheme(this);
-    }
 
-    private void updateUI()
-    {
-        locator.updateGPS();
-        isLocationPermissionGranted = true;
-        latitude = locator.getLatitude();
-        longitude = locator.getLongitude();
-        city = locator.getCity();
-        //geocoder failed to find city
-//        if (city.isEmpty()) {
-//            Snackbar.make(findViewById(R.id.main_view), "Unable to find locations city name", Snackbar.LENGTH_LONG).show();
-//            topCv.setVisibility(View.GONE);//hide the top card view if the city name is not found
-//        }
-//        else
-//            currentLocationTv.setText(city);
-        getData();
-    }
 
 }

@@ -34,15 +34,12 @@ public class Locator {
     public Locator(Activity activity)
     {
         this.activity = activity;
-        if(isLocationEnabled()) {
+        if(isLocationEnabled())
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);
-            updateGPS();
-        }
         else//user has disabled location services
-        {
             fusedLocationProviderClient = null;
-            retrieveLocation();
-        }
+        Log.d(TAG, "Locator: constructor");
+        updateGPS();
     }
 
     //save the location and city name to the shared preferences
@@ -83,6 +80,11 @@ public class Locator {
     }
 
     public void updateGPS() {
+        if(fusedLocationProviderClient == null)
+        {
+            retrieveLocation();
+            return;
+        }
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //permission granted
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(activity, new OnSuccessListener<Location>() {
@@ -113,6 +115,11 @@ public class Locator {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("location", Context.MODE_PRIVATE);
         //check if shared preferences contains the location
         return sharedPreferences.contains("latitude") && sharedPreferences.contains("longitude");
+    }
+
+    public boolean prevLocationLoaded()
+    {
+        return fusedLocationProviderClient == null;
     }
 
     public double getLatitude() {
