@@ -2,13 +2,15 @@ package com.example.flychecker;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationRequest;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,19 +52,19 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int PERMISSION_FINE_LOCATION = 99;
+
 
     private List<RawWeatherData> rawWeatherDataList = new ArrayList();
 
     private RecyclerView mRecyclerView;
     private WeatherAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private double latitude, longitude;
-    private String city;
     private TextView currentLocationTv;
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    private double latitude, longitude;
+    private CardView topCv;
+    private String city;
     private boolean isLocationPermissionGranted = false;
-
+    private Locator locator;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,13 +109,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setPrevOptions();
-        updateGPS();
-        //wait for location to be found
         setContentView(R.layout.activity_main2);
         setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
-
         mRecyclerView = findViewById(R.id.rv_list);
+        topCv = findViewById(R.id.cv_top);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new WeatherAdapter(this, rawWeatherDataList,
                 new WeatherAdapter.OnItemClickListener() {
@@ -129,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 // Refresh items
-                if(isLocationPermissionGranted)
                     getData();
             }
         });
-
+        locator = new Locator(this);
+        updateUI();
     }
 
     @Override
@@ -142,46 +143,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    //this method is called when the user accepts or denies a permission
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    updateGPS();
-                    break;
-                }
-                else{
-                    //permission denied
-                    //create a snackbar to inform user and ask for permission
-                    Snackbar.make(findViewById(R.id.mainview),
-                            "Location permission is required to get weather data",
-                            Snackbar.LENGTH_LONG)
-                            .setAction("Allow", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    ActivityCompat.requestPermissions(MainActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        PERMISSION_FINE_LOCATION);
-                                }
-                            })
-                            .show();
-                }
+        //the user has selected the location permission
+        if (requestCode == Locator.PERMISSION_FINE_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                updateUI();
+            } else {
+                //permission denied
+                //create an alertdialog to inform user and then exit the app
+                new AlertDialog.Builder(this)
+                        .setTitle("Location Permission Denied")
+                        .setMessage("Please allow location permission and restart the app")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
         }
     }
 
     //generate the api url based on the location
     @NonNull
-    private String setURL(String timezoneID) {
+    private String generateURL(String timezoneID, double latitude, double longitude) {
         String apiURL = "https://api.open-meteo.com/v1/forecast";
         String hourlyVariables = "hourly=temperature_2m,relativehumidity_2m,precipitation,cloudcover,weathercode,windspeed_10m,windspeed_80m,windspeed_120m,windgusts_10m";
         String timezone = "timezone=" + timezoneID;
-        String poslat = "latitude=" + "37.9792";
-        String poslon = "longitude=" + "23.7166";
+        String poslat = "latitude=" + latitude;
+        String poslon = "longitude=" + longitude;
         String timeformat = "timeformat=unixtime";
         String windunit = "windspeed_unit=ms";
         String dailyVariables = "daily=sunrise,sunset";
         String url = apiURL + "?" + hourlyVariables + "&" + timezone + "&" + poslat + "&" + poslon + "&" + dailyVariables + "&" + timeformat + "&" + windunit;
-        Log.d(TAG, "url: " + url);
+        Log.d(TAG, "open-meteo url: " + url);
         return url;
     }
 
@@ -197,9 +196,8 @@ public class MainActivity extends AppCompatActivity {
     private void getData() {
         //get timezone from the device
         if (!isNetworkAvailable()) {
-            //display a toast message if there is no internet connection
-            //TODO: display a better message when there is no internet connection
-            Snackbar.make(findViewById(R.id.mainview), getString(R.string.no_internet), Snackbar.LENGTH_LONG)
+            //display a snackbar if there is no internet connection with a retry button
+            Snackbar.make(findViewById(R.id.main_view), getString(R.string.no_internet), Snackbar.LENGTH_LONG)
                     .setAction("Retry", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -210,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //TODO:configure cache
         //TODO:configure timeouts
-        String url = setURL(java.util.TimeZone.getDefault().getID());
+        String url = generateURL(java.util.TimeZone.getDefault().getID(), latitude, longitude);
         swipeRefreshLayout.setRefreshing(true);
         JsonObjectRequest weatherReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -233,8 +231,8 @@ public class MainActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
-                //set snackbar to show error
-                Snackbar.make(findViewById(R.id.mainview), getString(R.string.request_failed), Snackbar.LENGTH_INDEFINITE)
+                //show a snackbar with a retry button if the request fails
+                Snackbar.make(findViewById(R.id.main_view), getString(R.string.request_failed), Snackbar.LENGTH_INDEFINITE)
                         .setAction("Retry", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -286,41 +284,21 @@ public class MainActivity extends AppCompatActivity {
         Helpers.setPrevTheme(this);
     }
 
-    private void updateGPS() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //permission granted
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        //permission granted now get the location
-                        getLocation(location);
-                    }
-                }
-            });
-        }
-        else {
-            //permission not granted
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
-        }
-    }
-
-    private void getLocation(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        //use geocoder to get the city name
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-                city = addresses.get(0).getLocality();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        currentLocationTv.setText(currentLocationTv.getText() + city);
+    private void updateUI()
+    {
+        locator.updateGPS();
+        isLocationPermissionGranted = true;
+        latitude = locator.getLatitude();
+        longitude = locator.getLongitude();
+        city = locator.getCity();
+        //geocoder failed to find city
+//        if (city.isEmpty()) {
+//            Snackbar.make(findViewById(R.id.main_view), "Unable to find locations city name", Snackbar.LENGTH_LONG).show();
+//            topCv.setVisibility(View.GONE);//hide the top card view if the city name is not found
+//        }
+//        else
+//            currentLocationTv.setText(city);
         getData();
-
     }
+
 }
