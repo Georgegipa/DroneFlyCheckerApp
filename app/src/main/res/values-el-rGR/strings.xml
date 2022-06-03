@@ -54,4 +54,24 @@
     <string name="request_failed">Το αίτημα απέτυχε</string>
     <string name="gps_permission_denied">Απορρίφθηκε πρόσβαση στο GPS</string>
     <string name="gps_permission_denied_message">Ενεργοποιήστε την πρόσβαση τοποθεσίας και δοκιμάστε ξανά!</string>
+    <string name="mainly_clear">Καθαρός ουρανός</string>
+    <string name="partly_cloudy">Μερικώς συννεφιασμένος</string>
+    <string name="overcast">Αρκετά συννεφώδης</string>
+    <string name="fog">Oμίχλη</string>
+    <string name="drizzle">Ψιχάλη</string>
+    <string name="rain">Βροχή</string>
+    <string name="snow_fall">Χιονόπτωση</string>
+    <string name="rain_showers">Μπόρες</string>
+    <string name="snow_showers">Χιονόπτωση</string>
+    <string name="thunderstorm">Καταιγίδα</string>
+    <string name="weather_light">Ελαφύ</string>
+    <string name="weather_moderate">Μέτριο</string>
+    <string name="weather_heavy">Βαρύ</string>
+    <string name="freezing">Παγωμένη</string>
+    <string name="clear_sky">Kαθαρός ουρανός</string>
+    <string name="unknown_weather">Άγνωστες Καιρικές Συνθήκες</string>
+    <string name="snow_grains">Κόκκοι χιονιού</string>
+    <string name="wind_caution">Η ταχύτητα του ανέμου μπορεί να επηρεάσει την πτήση.</string>
+    <string name="wind_danger">Οι ταχύτητες ανέμου είναι πολύ υψηλές, αποφύγετε να πετάξετε αν είναι δυνατόν.</string>
+    <string name="weather_summary">Περίληψη καιρού</string>
 </resources>

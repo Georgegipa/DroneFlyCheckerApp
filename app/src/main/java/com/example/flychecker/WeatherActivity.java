@@ -1,5 +1,6 @@
 package com.example.flychecker;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 public class WeatherActivity extends AppCompatActivity {
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,13 +25,12 @@ public class WeatherActivity extends AppCompatActivity {
             Status status = wd.checkAll();
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(Helpers.convertUnixToDate(this,weather.getTime()));
-            //setup overall card view
+            //setup weather summary card view
             ImageView overallIv = findViewById(R.id.iv_overall);
-            TextView overallTv = findViewById(R.id.tv_overall);
             TextView overallSummaryTv = findViewById(R.id.tv_overall_summary);
             overallIv.setImageResource(Helpers.statusToIcon(status));
-            overallTv.setText(Helpers.statusToString(status));
-            overallSummaryTv.setText("hello there");
+            setIcon(overallSummaryTv,wd.checkWeatherCode());
+            overallSummaryTv.setText(wd.getWeatherCodeSummary());
             //setup temperature card view
             ImageView temperatureIv = findViewById(R.id.iv_temperature);
             TextView temperatureTv = findViewById(R.id.tv_temperature);
@@ -57,15 +58,16 @@ public class WeatherActivity extends AppCompatActivity {
             TextView wind10mTv = findViewById(R.id.tv_wind_10m);
             TextView wind80mTv = findViewById(R.id.tv_wind_80m);
             TextView wind120mTv = findViewById(R.id.tv_wind_120m);
+            TextView windSummaryTv = findViewById(R.id.tv_wind_summary);
             wind10mTv.setText(getString(R.string.Wind)+"10m: "+ PreferencesHelpers.getWindSpeedUnit(this,weather.getWindSpeed10m()));
             wind80mTv.setText(getString(R.string.Wind)+" 80m: "+ PreferencesHelpers.getWindSpeedUnit(this,weather.getWindSpeed80m()));
             wind120mTv.setText(getString(R.string.Wind)+" 120m: "+ PreferencesHelpers.getWindSpeedUnit(this,weather.getWindSpeed120m()));
-            Status[] windStatus = wd.checkWindSpeeds();
+            windSummaryTv.setText(wd.getWindSpeedsSummary());
             windIv.setColorFilter(getResources().getColor(Helpers.statusToColor(wd.checkAllWindSpeeds())));
-            //set drawable to textview
-            wind10mTv.setCompoundDrawablesWithIntrinsicBounds(Helpers.statusToIcon(windStatus[0]), 0, 0, 0);
-            wind80mTv.setCompoundDrawablesWithIntrinsicBounds(Helpers.statusToIcon(windStatus[1]), 0, 0, 0);
-            wind120mTv.setCompoundDrawablesWithIntrinsicBounds(Helpers.statusToIcon(windStatus[2]), 0, 0, 0);
+            Status[] windStatus = wd.checkWindSpeeds();
+            setIcon(wind10mTv,windStatus[0]);
+            setIcon(wind80mTv,windStatus[1]);
+            setIcon(wind120mTv,windStatus[2]);
             //TODO: add wind summary
             //setup gusts card view
             ImageView gustsIv = findViewById(R.id.iv_gusts);
@@ -93,5 +95,10 @@ public class WeatherActivity extends AppCompatActivity {
             item.setVisibility(View.VISIBLE);
             item.setText(summary);
         }
+    }
+
+    //adds an icon in front of the given textview
+    private void setIcon(TextView item, Status status) {
+        item.setCompoundDrawablesWithIntrinsicBounds(Helpers.statusToIcon(status), 0, 0, 0);
     }
 }

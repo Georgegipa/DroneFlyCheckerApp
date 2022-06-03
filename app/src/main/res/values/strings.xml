@@ -57,4 +57,24 @@
     <string name="request_failed">Request Failed</string>
     <string name="gps_permission_denied">GPS Permission denied</string>
     <string name="gps_permission_denied_message">Please enabled location access and try again!</string>
+    <string name="clear_sky">Clear sky</string>
+    <string name="mainly_clear">Mainly clear</string>
+    <string name="partly_cloudy">Partly cloudy</string>
+    <string name="overcast">Overcast</string>
+    <string name="fog">Fog</string>
+    <string name="freezing">Freezing</string>
+    <string name="drizzle">Drizzle</string>
+    <string name="rain">Rain</string>
+    <string name="snow_fall">Snowfall</string>
+    <string name="snow_grains">Snow grains</string>
+    <string name="rain_showers">Rain showers</string>
+    <string name="snow_showers">Snow showers</string>
+    <string name="thunderstorm">Thunderstorm</string>
+    <string name="weather_light">light</string>
+    <string name="weather_moderate">moderate</string>
+    <string name="weather_heavy">heavy</string>
+    <string name="unknown_weather">Unknown Weather Conditions</string>
+    <string name="wind_caution">Wind speed may effect flight.</string>
+    <string name="wind_danger">Wind speeds are too high, avoid flying if possible.</string>
+    <string name="weather_summary">Weather Summary</string>
 </resources>

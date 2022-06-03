@@ -38,14 +38,14 @@
                     android:src="@drawable/ic_baseline_check_24" />
 
                 <TextView
-                    android:id="@+id/tv_overall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:text="Overview"
-                    android:textSize="25sp" />
+                    android:text="@string/weather_summary"
+                    android:textSize="25sp"
+                     />
 
                 <TextView
                     android:id="@+id/tv_overall_summary"
@@ -55,7 +55,7 @@
                     android:textAlignment="center"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:text="Display weather code info"
+                    app:drawableLeftCompat="@drawable/ic_baseline_check_24"
                     android:textSize="15sp" />
 
             </LinearLayout>
@@ -325,7 +325,7 @@
                     android:layout_marginRight="10dp"
                     android:text="Wind 10m:10km/h"
                     app:drawableLeftCompat="@drawable/ic_baseline_check_24"
-                    android:textSize="23sp"/>
+                    android:textSize="@dimen/category_text_size"/>
 
                 <TextView
                     android:id="@+id/tv_wind_80m"
@@ -334,7 +334,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:text="Wind 80m:80km/h"
-                    android:textSize="23sp"
+                    android:textSize="@dimen/category_text_size"
                     app:drawableLeftCompat="@drawable/ic_baseline_check_24" />
 
                 <TextView
@@ -344,8 +344,18 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:text="Wind 120m:10km/h"
-                    android:textSize="23sp"
+                    android:textSize="@dimen/category_text_size"
                     app:drawableLeftCompat="@drawable/ic_baseline_check_24" />
+
+                <TextView
+                    android:id="@+id/tv_wind_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center"
+                    android:text="Wind 120m:10km/h"
+                    android:textSize="@dimen/summary_text_size" />
 
 
             </LinearLayout>
