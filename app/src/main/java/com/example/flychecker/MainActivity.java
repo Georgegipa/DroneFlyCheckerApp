@@ -111,21 +111,18 @@ public class MainActivity extends AppCompatActivity {
         Helpers.setPrevTheme(this);
         setupGUI();
         locator = new Locator(this);
-        if(!locator.isLocationEnabled()) {
-            //TODO: retrieve last location
-            exitAlert("Closing app","Location services are disabled. Please enable location services to use this app.");
+        if(!locator.isLocationEnabled() && !locator.prevLocationExists()) {
+            exitAlert("GPS disabled", "Please enable GPS to use this app.");
         }
-        //this is voodoo magic
-        locator.updateGPS(new OnSuccessListener<Location>(){
-            //wait for location
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    updateUI();
+        else {
+            locator.updateGPS(new OnSuccessListener<Location>() {
+                //wait for location
+                @Override
+                public void onSuccess(Location location) {
                     getData();
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -138,8 +135,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //the user has selected the location permission
-        int locper = Locator.PERMISSION_FINE_LOCATION;
-        if (requestCode == locper ) {
+        if (requestCode == Locator.PERMISSION_FINE_LOCATION ) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //permission granted
                 updateUI();
@@ -256,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //TODO:configure cache
         //TODO:configure timeouts
+        updateUI();
         String url = generateURL(java.util.TimeZone.getDefault().getID(), latitude, longitude);
         swipeRefreshLayout.setRefreshing(true);
         JsonObjectRequest weatherReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

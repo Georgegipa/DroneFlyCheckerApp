@@ -29,17 +29,14 @@ public class Locator {
     private double latitude;
     private double longitude;
     private String city;
-    private final boolean usingGPS;
+    private boolean usingCachedLocation;
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private final Activity activity;
 
     public Locator(Activity activity) {
         this.activity = activity;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);
-        if (isLocationEnabled())
-            usingGPS = true;
-        else//user has disabled location services
-            usingGPS = false;
+
     }
 
 
@@ -79,10 +76,6 @@ public class Locator {
     }
 
     public void updateGPS(OnSuccessListener<Location> locationListener) {
-        if (!usingGPS) {
-            retrieveLocation();
-            return;
-        }
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //permission granted
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(activity, new OnSuccessListener<Location>() {
@@ -92,8 +85,13 @@ public class Locator {
                         //permission granted now get the location
                         //getLocation(location);
                         getLocation(location);
-                        locationListener.onSuccess(location);
+                        usingCachedLocation = false;
+                    } else {
+                        //permission granted but no location yet
+                        usingCachedLocation = true;
+                        retrieveLocation();
                     }
+                    locationListener.onSuccess(location);
                 }
             });
         } else {
@@ -116,7 +114,7 @@ public class Locator {
     }
 
     public boolean prevLocationLoaded() {
-        return fusedLocationProviderClient == null;
+        return usingCachedLocation;
     }
 
     public double getLatitude() {
