@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -110,18 +111,21 @@ public class MainActivity extends AppCompatActivity {
         Helpers.setPrevTheme(this);
         setupGUI();
         locator = new Locator(this);
-        swipeRefreshLayout.setRefreshing(false);
-        //wait for location to load before getting data
-        
-
-        //wait for location response
-
-        //failed to get location from GPS and last known location
-        if(!locator.prevLocationExists() && !locator.isLocationEnabled())
-            exitAlert("Unable to get location","Try to enabling gps and try again!");
-        getData();
-        //toast message that oncreate is called
-        Toast.makeText(this, "onCreate() called", Toast.LENGTH_SHORT).show();
+        if(!locator.isLocationEnabled()) {
+            //TODO: retrieve last location
+            exitAlert("Closing app","Location services are disabled. Please enable location services to use this app.");
+        }
+        //this is voodoo magic
+        locator.updateGPS(new OnSuccessListener<Location>(){
+            //wait for location
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    updateUI();
+                    getData();
+                }
+            }
+        });
     }
 
     @Override
@@ -138,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == locper ) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //permission granted
+                updateUI();
                 getData();
             } else {
                 //permission denied
@@ -177,11 +182,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI()
     {
-        locator.updateGPS();
         latitude = locator.getLatitude();
         longitude = locator.getLongitude();
         city = locator.getCity();
-        Log.d(TAG, "updateUI: " + city);
+        Log.d(TAG, "updateUI: " + latitude + " " + longitude + " " + city);
         //geocoder failed to find city
         if (TextUtils.isEmpty(city)) {//check if city is empty or null
             Snackbar.make(findViewById(R.id.main_view), "Unable to find locations city name", Snackbar.LENGTH_LONG).show();
@@ -239,7 +243,6 @@ public class MainActivity extends AppCompatActivity {
     //make the api call and load the data
     private void getData() {
         //get timezone from the device
-        updateUI();
         if (!isNetworkAvailable()) {
             //display a snackbar if there is no internet connection with a retry button
             Snackbar.make(findViewById(R.id.main_view), getString(R.string.no_internet), Snackbar.LENGTH_LONG)
@@ -323,7 +326,5 @@ public class MainActivity extends AppCompatActivity {
             rawWeatherDataList.add(rawWeatherData);
         }
     }
-
-
 
 }

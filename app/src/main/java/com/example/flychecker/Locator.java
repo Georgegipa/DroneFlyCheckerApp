@@ -14,6 +14,7 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -28,23 +29,22 @@ public class Locator {
     private double latitude;
     private double longitude;
     private String city;
+    private final boolean usingGPS;
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private final Activity activity;
 
-    public Locator(Activity activity)
-    {
+    public Locator(Activity activity) {
         this.activity = activity;
-        if(isLocationEnabled())
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);
+        if (isLocationEnabled())
+            usingGPS = true;
         else//user has disabled location services
-            fusedLocationProviderClient = null;
-        Log.d(TAG, "Locator: constructor");
-        updateGPS();
+            usingGPS = false;
     }
 
+
     //save the location and city name to the shared preferences
-    private void saveLocation()
-    {
+    private void saveLocation() {
         SharedPreferences.Editor editor = activity.getSharedPreferences("location", Context.MODE_PRIVATE).edit();
         editor.putString("latitude", String.valueOf(latitude));
         editor.putString("longitude", String.valueOf(longitude));
@@ -53,8 +53,7 @@ public class Locator {
     }
 
     //retrieve the location and city name from the shared preferences
-    private void retrieveLocation()
-    {
+    private void retrieveLocation() {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("location", Context.MODE_PRIVATE);
         latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
         longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
@@ -79,9 +78,8 @@ public class Locator {
         saveLocation();
     }
 
-    public void updateGPS() {
-        if(fusedLocationProviderClient == null)
-        {
+    public void updateGPS(OnSuccessListener<Location> locationListener) {
+        if (!usingGPS) {
             retrieveLocation();
             return;
         }
@@ -92,12 +90,13 @@ public class Locator {
                 public void onSuccess(Location location) {
                     if (location != null) {
                         //permission granted now get the location
+                        //getLocation(location);
                         getLocation(location);
+                        locationListener.onSuccess(location);
                     }
                 }
             });
-        }
-        else {
+        } else {
             //permission not granted
             activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
         }
@@ -110,15 +109,13 @@ public class Locator {
         );
     }
 
-    public boolean prevLocationExists()
-    {
+    public boolean prevLocationExists() {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("location", Context.MODE_PRIVATE);
         //check if shared preferences contains the location
         return sharedPreferences.contains("latitude") && sharedPreferences.contains("longitude");
     }
 
-    public boolean prevLocationLoaded()
-    {
+    public boolean prevLocationLoaded() {
         return fusedLocationProviderClient == null;
     }
 
