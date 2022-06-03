@@ -1,17 +1,12 @@
 package com.example.flychecker;
 
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -27,7 +22,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -37,8 +31,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -46,10 +38,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -126,6 +116,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        //refresh adapter data to change language inside the recycler view
+        adapter.refreshData(rawWeatherDataList);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
     }
@@ -141,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 recreate();//restart activity and trigger onCreate
             } else {
                 //permission denied
-                exitAlert("Permission denied", "You have denied the permission to access your location.");
+                exitAlert(getString(R.string.gps_permission_denied), getString(R.string.gps_permission_denied_message));
             }
         }
     }
@@ -264,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                     //create a toasts to show that the data is loaded
                     Toast.makeText(getApplicationContext(), getString(R.string.data_refreshed), Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
+                    adapter.refreshData(rawWeatherDataList);//update the adapter
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

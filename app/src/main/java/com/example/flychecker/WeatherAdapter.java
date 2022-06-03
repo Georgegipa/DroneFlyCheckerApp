@@ -55,7 +55,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     //set the data to the view
 
-    public void setmWeatherList(List<RawWeatherData> weatherList) {
+    public void refreshData(List<RawWeatherData> weatherList) {
         this.rawWeatherDataList = weatherList;
         notifyDataSetChanged();
     }

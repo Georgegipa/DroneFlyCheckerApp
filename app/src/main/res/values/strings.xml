@@ -49,10 +49,12 @@
     <string name="precipitation_caution">Precipitation is low, but it is possible that it will rain soon</string>
     <string name="precipitation_danger">Precipitation is high, high risk of rain</string>
     <string name="humidity_caution">High humidity, try avoid flying in the current environment</string>
-    <string name="cloud_cover_caution">Very cloudy weather, limited visibily and signal coverage may effect operations.</string>
+    <string name="cloud_cover_caution">Very cloudy weather, limited visibility and signal coverage may effect operations.</string>
     <string name="cloud_cover_danger">Cloudy weather may impact signal coverage and visibility.</string>
     <string name="gust_caution">High wind gusts detected!Drone control may be impacted negatively.</string>
-    <string name="gust_danger">Current wind gusts may slow down drone speed and have a drastric impact on battery life.</string>
+    <string name="gust_danger">Current wind gusts may slow down drone speed and have a drastic impact on battery life.</string>
     <string name="waterproof">Waterproof</string>
     <string name="request_failed">Request Failed</string>
+    <string name="gps_permission_denied">GPS Permission denied</string>
+    <string name="gps_permission_denied_message">Please enabled location access and try again!</string>
 </resources>

@@ -52,4 +52,6 @@
     <string name="waterproof">Αδιάβροχο</string>
     <string name="no_internet">Δεν υπάρχει σύνδεση</string>
     <string name="request_failed">Το αίτημα απέτυχε</string>
+    <string name="gps_permission_denied">Απορρίφθηκε πρόσβαση στο GPS</string>
+    <string name="gps_permission_denied_message">Ενεργοποιήστε την πρόσβαση τοποθεσίας και δοκιμάστε ξανά!</string>
 </resources>
