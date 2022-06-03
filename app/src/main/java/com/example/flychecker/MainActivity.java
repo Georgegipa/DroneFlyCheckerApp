@@ -138,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == Locator.PERMISSION_FINE_LOCATION ) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //permission granted
-                updateUI();
-                getData();
+                recreate();//restart activity and trigger onCreate
             } else {
                 //permission denied
                 exitAlert("Permission denied", "You have denied the permission to access your location.");
