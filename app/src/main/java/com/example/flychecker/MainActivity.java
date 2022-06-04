@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private CardView topCv;
     private String city;
     private Locator locator;
+    private LinearLayout topLl;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        //trigger a refresh every 1 hour to update data
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
     }
 
     @Override
@@ -151,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         currentLocationTv = findViewById(R.id.tv_current_location);
         mRecyclerView = findViewById(R.id.rv_list);
         topCv = findViewById(R.id.cv_top);
+        topLl = findViewById(R.id.ll_top);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new WeatherAdapter(this, rawWeatherDataList,
                 new WeatherAdapter.OnItemClickListener() {
@@ -168,6 +178,19 @@ public class MainActivity extends AppCompatActivity {
             public void onRefresh() {
                 // Refresh items
                 getData();
+            }
+        });
+
+        //show lineralayout when pressed
+        topCv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(topLl.getVisibility() == View.GONE) {
+                    topLl.setVisibility(View.VISIBLE);
+                }
+                else {
+                    topLl.setVisibility(View.GONE);
+                }
             }
         });
     }

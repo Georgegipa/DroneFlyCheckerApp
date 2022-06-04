@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_view">
+    android:orientation="vertical">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -22,8 +22,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="10dp"
                 app:cardMaxElevation="12dp">
@@ -32,9 +32,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -48,6 +48,44 @@
                         android:textStyle="bold"
                         app:drawableLeftCompat="@drawable/ic_baseline_location_city_24" />
 
+                    <LinearLayout
+                        android:id="@+id/ll_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Currently using gps data!"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="latitude: 12.32"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="longtitute: 12.32"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Last updated: 12.32"
+                            android:textSize="16sp"/>
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
