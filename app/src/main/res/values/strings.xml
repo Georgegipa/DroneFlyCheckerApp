@@ -77,4 +77,5 @@
     <string name="wind_caution">Wind speed may effect flight.</string>
     <string name="wind_danger">Wind speeds are too high, avoid flying if possible.</string>
     <string name="weather_summary">Weather Summary</string>
+    <string name="location_from_cache">Loading last known location from cache!</string>
 </resources>

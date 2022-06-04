@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private WeatherAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView currentLocationTv;
+    private TextView currentLocationTv,notificationBarTv;
     private double latitude, longitude;
     private CardView topCv;
     private String city;
@@ -111,17 +113,14 @@ public class MainActivity extends AppCompatActivity {
                 //wait for location
                 @Override
                 public void onSuccess(Location location) {
+                    //load data to class to avoid null values
+                    latitude = locator.getLatitude();
+                    longitude = locator.getLongitude();
+                    city = locator.getCity();
                     getData();
                 }
             });
         }
-        //trigger a refresh every 1 hour to update data
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getData();
-            }
-        });
     }
 
     @Override
@@ -156,11 +155,12 @@ public class MainActivity extends AppCompatActivity {
     private void setupGUI()
     {
         setContentView(R.layout.activity_main2);
-        setTitle(getString(R.string.safe_for_takeoff));
+        //setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
         mRecyclerView = findViewById(R.id.rv_list);
         topCv = findViewById(R.id.cv_top);
         topLl = findViewById(R.id.ll_top);
+        notificationBarTv = findViewById(R.id.tv_notification_bar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new WeatherAdapter(this, rawWeatherDataList,
                 new WeatherAdapter.OnItemClickListener() {
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //show lineralayout when pressed
+        //show linearlayout when pressed
         topCv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,9 +197,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI()
     {
-        latitude = locator.getLatitude();
-        longitude = locator.getLongitude();
-        city = locator.getCity();
         Log.d(TAG, "updateUI: " + latitude + " " + longitude + " " + city);
         //geocoder failed to find city
         if (TextUtils.isEmpty(city)) {//check if city is empty or null
@@ -212,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(locator.prevLocationLoaded())
         {
-            Snackbar.make(findViewById(R.id.main_view), "Unable to retrieve latest gps location loading latest known position", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.main_view), R.string.location_from_cache, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -282,7 +279,8 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = response.getJSONObject("hourly");
                     parseJSONHourly(jsonObject);
                     //create a toasts to show that the data is loaded
-                    Toast.makeText(getApplicationContext(), getString(R.string.data_refreshed), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), getString(R.string.data_refreshed), Toast.LENGTH_SHORT).show();
+                    notificationBar(getString(R.string.data_refreshed),getColor(R.color.green),3500);//similar to LONG_DELAY
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.refreshData(rawWeatherDataList);//update the adapter
                 } catch (JSONException e) {
@@ -341,6 +339,20 @@ public class MainActivity extends AppCompatActivity {
             rawWeatherData.setHumidity(Double.parseDouble(humidityJsonArray.getString(i)));
             rawWeatherDataList.add(rawWeatherData);
         }
+    }
+
+    //show the notification bar for 5 seconds and then hide it
+    private void notificationBar(String text, int color,int delay)
+    {
+        notificationBarTv.setVisibility(View.VISIBLE);
+        notificationBarTv.setBackgroundColor(color);
+        notificationBarTv.setText(text);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notificationBarTv.setVisibility(View.GONE);
+            }
+        }, delay);
     }
 
 }
