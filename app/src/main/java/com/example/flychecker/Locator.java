@@ -22,11 +22,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import Helpers.PreferencesHelpers;
+
 public class Locator {
     private static final String TAG = Locator.class.getSimpleName();
     private double latitude;
     private double longitude;
-    private String city;
     private boolean usingCachedLocation;
     private final FusedLocationProviderClient fusedLocationProviderClient;
     private final Activity activity;
@@ -36,13 +37,11 @@ public class Locator {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);
     }
 
-
     //save the location and city name to the shared preferences
     private void saveLocation() {
         SharedPreferences.Editor editor = activity.getSharedPreferences("location", Context.MODE_PRIVATE).edit();
         editor.putString("latitude", String.valueOf(latitude));
         editor.putString("longitude", String.valueOf(longitude));
-        editor.putString("city", city);
         editor.apply();
     }
 
@@ -51,10 +50,9 @@ public class Locator {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("location", Context.MODE_PRIVATE);
         latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
         longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
-        city = sharedPreferences.getString("city", "");
     }
 
-    public static boolean oldLocationExists(Context context) {
+    public static boolean locationExistsInCache(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
         return sharedPreferences.contains("latitude") && sharedPreferences.contains("longitude") && sharedPreferences.contains("city");
     }
@@ -63,18 +61,23 @@ public class Locator {
     private void getLocation(Location location) {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
+        saveLocation();
+    }
+
+    public static String locationToCityName(Activity act,double latitude,double longitude)
+    {
         //use geocoder to get the city name
-        Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(act, Locale.getDefault());
+        Log.d("Locale", Locale.getDefault().toString());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
-                city = addresses.get(0).getLocality();
+                return addresses.get(0).getLocality();
             }
         } catch (IOException e) {
-            city = "";
             Log.d(TAG, "IOException: " + e.getMessage());
         }
-        saveLocation();
+        return "";
     }
 
     public void updateGPS(OnSuccessListener<Location> locationListener) {
@@ -115,7 +118,4 @@ public class Locator {
         return longitude;
     }
 
-    public String getCity() {
-        return city;
-    }
 }

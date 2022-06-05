@@ -6,13 +6,11 @@ import android.os.Parcelable;
 public class LocationObj implements Parcelable {
     private double latitude;
     private double longitude;
-    private String city;
     private boolean usingCachedLocation;
 
-    public LocationObj(double latitude, double longitude, String city, boolean usingCachedLocation) {
+    public LocationObj(double latitude, double longitude, boolean usingCachedLocation) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.city = city;
         this.usingCachedLocation = usingCachedLocation;
     }
 
@@ -22,10 +20,6 @@ public class LocationObj implements Parcelable {
 
     public double getLongitude() {
         return longitude;
-    }
-
-    public String getCity() {
-        return city;
     }
 
     public boolean isUsingCachedLocation() {
@@ -41,21 +35,18 @@ public class LocationObj implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
-        dest.writeString(this.city);
         dest.writeByte(this.usingCachedLocation ? (byte) 1 : (byte) 0);
     }
 
     public void readFromParcel(Parcel source) {
         this.latitude = source.readDouble();
         this.longitude = source.readDouble();
-        this.city = source.readString();
         this.usingCachedLocation = source.readByte() != 0;
     }
 
     protected LocationObj(Parcel in) {
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
-        this.city = in.readString();
         this.usingCachedLocation = in.readByte() != 0;
     }
 
