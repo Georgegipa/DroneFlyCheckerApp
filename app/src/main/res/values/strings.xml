@@ -83,4 +83,6 @@
     <string name="last_update">Last Update:</string>
     <string name="coordinates">Coordinates:</string>
     <string name="now">Now</string>
+    <string name="speed_to_low">Drone speed can\'t be lower than 3m/s!</string>
+    <string name="retry">Retry</string>
 </resources>

@@ -1,14 +1,11 @@
 package com.example.flychecker;
 
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -239,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isNetworkAvailable()) {
             //display a snackbar if there is no internet connection with a retry button
             Snackbar.make(findViewById(R.id.main_view), getString(R.string.no_internet), Snackbar.LENGTH_LONG)
-                    .setAction("Retry", v -> getData()).show();
+                    .setAction(R.string.retry, v -> getData()).show();
             return;
         }
         //TODO:configure cache
@@ -248,12 +245,10 @@ public class MainActivity extends AppCompatActivity {
         JsonObjectRequest weatherReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //Log.d(TAG, response.toString());
                 try {
                     JSONObject jsonObject = response.getJSONObject("hourly");
                     parseJSONHourly(jsonObject);
                     //create a toasts to show that the data is loaded
-                    //Toast.makeText(getApplicationContext(), getString(R.string.data_refreshed), Toast.LENGTH_SHORT).show();
                     notificationBar(getString(R.string.data_refreshed),getColor(R.color.green),3500);//similar to LONG_DELAY
                     swipeRefreshLayout.setRefreshing(false);
                     lastRefreshTime = System.currentTimeMillis();
@@ -271,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 //show a snackbar with a retry button if the request fails
                 Snackbar.make(findViewById(R.id.main_view), getString(R.string.request_failed), Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Retry", v -> getData()).show();
+                        .setAction(R.string.retry, v -> getData()).show();
             }
         });
         AppController.getInstance().addToRequestQueue(weatherReq);

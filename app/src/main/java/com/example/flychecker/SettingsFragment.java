@@ -3,6 +3,7 @@ package com.example.flychecker;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -73,11 +74,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         } else if (preference instanceof SeekBarPreference) {
             if (key.equals("pref_key_max_speed")) {
                 int windSpeed = sharedPreferences.getInt("pref_key_max_speed", 15);
-                //TODO: fix min value on seekbar
-                if(windSpeed > 5)
+                if(windSpeed > 3) {
                     PreferencesHelpers.setMaxSpeed(this.requireActivity(), windSpeed);
-                else
-                    sharedPreferences.edit().putInt("pref_key_max_speed", 5).apply();
+                }
+                else {
+                    sharedPreferences.edit().putInt("pref_key_max_speed", 3).apply();
+                    Toast.makeText(this.requireActivity(), R.string.speed_to_low, Toast.LENGTH_SHORT).show();
+                    PreferencesHelpers.setMaxSpeed(this.requireActivity(), 3);
+                }
             }
         }
     }
