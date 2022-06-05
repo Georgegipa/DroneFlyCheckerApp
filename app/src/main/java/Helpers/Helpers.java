@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -87,33 +88,39 @@ public abstract class Helpers {
         return unixtime > System.currentTimeMillis() / 1000 - 3600 && unixtime < System.currentTimeMillis() / 1000;
     }
 
-    //convert unix timestamp to time with date
+    //convert unix timestamp to time with date (time is always with 00 minutes)
     public static String convertUnixToDate(Context context, long unixTime) {
         if(isLastHour(unixTime))
             return context.getString(R.string.now);
         java.util.Date date = new java.util.Date(unixTime * 1000L);
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
         sdf.setTimeZone(java.util.TimeZone.getDefault());
-        return sdf.format(date) + " " + convertUnixToTime(context, unixTime);
+        String formattedDate = sdf.format(date).split(" ")[0];
+        String time = sdf.format(date).split(" ")[1];
+        if (!PreferencesHelpers.is24HourFormat(context)) {
+            formattedDate += " " + convertTo12h(context, time);
+        } else
+            formattedDate += " " + time;
+        return formattedDate;
     }
 
-
+    //convert unix timestamp to time (minutes are always accurate)
     public static String convertUnixToTime(Context context, long unixTime) {
-        java.util.Date date = new java.util.Date(unixTime * 1000L);
+        //convert unix timestamp to time
+        java.util.Date date = new java.util.Date(unixTime);
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm");
         sdf.setTimeZone(java.util.TimeZone.getDefault());
-        String time="";
-        if (!PreferencesHelpers.is24HourFormat(context)) {
-            time = convertTo12h(context, sdf.format(date));
-        }
-        return time;
+        String formattedDate = sdf.format(date);
+        if(!PreferencesHelpers.is24HourFormat(context))
+            return convertTo12h(context,formattedDate);
+        else
+            return formattedDate;
     }
 
     //convert a 24hr time to 12hr time (12:00 -> 12:00 PM)
     private static String convertTo12h(Context context, String time) {
         String[] timeSplit = time.split(":");
         int hour = Integer.parseInt(timeSplit[0]);
-        context.getString(R.string.am);
         String amPm = "";
         if (hour > 12) {
             hour -= 12;
