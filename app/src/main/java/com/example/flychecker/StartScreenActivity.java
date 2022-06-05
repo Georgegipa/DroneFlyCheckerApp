@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -158,8 +159,18 @@ public class StartScreenActivity extends AppCompatActivity {
             }
             //if the none of the apps that use fused location have been used recently
             // the app will fail to get the location
-            //In order to avoid this behavior we use locationmanager to get the current location
+            //In order to avoid this behavior we use location manager to get the current location
+            //location manager will get the current location and save it in shared preferences
+            //this will take a bit, so show a loading alert dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            builder.setView(inflater.inflate(R.layout.loading_alert_dialog, null));
+            builder.setCancelable(true);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
             locator.getCurrentLocation(location -> {
+                dialog.dismiss();
                 Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
                 intent.putExtra("location", new LocationObj(location.getLatitude(), location.getLongitude(), false));
                 startActivity(intent);

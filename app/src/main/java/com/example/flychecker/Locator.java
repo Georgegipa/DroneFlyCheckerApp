@@ -66,7 +66,7 @@ public class Locator {
 
     public static boolean locationExistsInCache(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
-        return sharedPreferences.contains("latitude") && sharedPreferences.contains("longitude") && sharedPreferences.contains("city");
+        return sharedPreferences.contains("latitude") && sharedPreferences.contains("longitude");
     }
 
     //helper function that parses gps location to lat and long and city name

@@ -81,7 +81,6 @@
     <string name="last_update">Τελευταία ανανέωση:</string>
     <string name="now">Τώρα</string>
     <string name="speed_to_low">Η ταχύτητα drone δεν μπορεί να είναι χαμηλότερη από 3m/s!</string>
-    <string name="speed_to_low">Η ταχύτητα drone δεν μπορεί να είναι χαμηλότερη από 3m/s!</string>
     <string name="retry">Προσπαθήστε ξανά</string>
-    <string name="retry">Π</string>
+    <string name="please_wait">Γίνεται φόρτωση της τοποθεσίας σας</string>
 </resources>
