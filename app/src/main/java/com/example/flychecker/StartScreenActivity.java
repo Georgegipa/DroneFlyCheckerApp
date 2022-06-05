@@ -42,12 +42,6 @@ public class StartScreenActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //updateLoc();
-    }
-
     private void updateLoc() {
         Log.d("SplashScreenActivity", "updateLoc: " + times);
         if(locator.isLocationEnabled() || Locator.locationExistsInCache(this)) {
@@ -56,12 +50,12 @@ public class StartScreenActivity extends AppCompatActivity {
                 //load data to class to avoid null values
                 double latitude = locator.getLatitude();
                 double longitude = locator.getLongitude();
-                Log.d("TAG", "onSuccess: " + latitude + " " + longitude );
-                LocationObj locObj = new LocationObj(latitude, longitude, locator.prevLocationLoaded());
-                //intent to MainActivity
-                Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
-                intent.putExtra("location", locObj);
-                startActivity(intent);
+                Log.d("TAG", "onSuccess: " + latitude + " " + longitude + " " + locator.prevLocationLoaded());
+                if(latitude == 200 && longitude ==200)
+                    intentToMainActivity(null);
+                else {
+                    intentToMainActivity(new LocationObj(latitude, longitude, locator.prevLocationLoaded()));
+                }
             });
         }
         else
@@ -114,7 +108,6 @@ public class StartScreenActivity extends AppCompatActivity {
                 displayManualPermit();
             }
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
-
         }
     }
 
@@ -142,5 +135,35 @@ public class StartScreenActivity extends AppCompatActivity {
             finish();
         });
         builder.show();
+    }
+
+    private void intentToMainActivity(LocationObj locationObj) {
+
+        if(locationObj!= null) {
+
+            Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
+            intent.putExtra("location", locationObj);
+            startActivity(intent);
+        }
+        else
+        {
+            //if the gps is not enabled exit the app
+            if(!locator.isLocationEnabled()){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Location is not enabled. Please enable location services and restart app with location enabled");
+                builder.setPositiveButton("ok", (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                });
+            }
+            //if the none of the apps that use fused location have been used recently
+            // the app will fail to get the location
+            //In order to avoid this behavior we use locationmanager to get the current location
+            locator.getCurrentLocation(location -> {
+                Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
+                intent.putExtra("location", new LocationObj(location.getLatitude(), location.getLongitude(), false));
+                startActivity(intent);
+            });
+        }
     }
 }

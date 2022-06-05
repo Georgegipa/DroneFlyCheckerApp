@@ -75,4 +75,9 @@
     <string name="wind_danger">Οι ταχύτητες ανέμου είναι πολύ υψηλές, αποφύγετε να πετάξετε αν είναι δυνατόν.</string>
     <string name="weather_summary">Περίληψη καιρού</string>
     <string name="location_from_cache">Έγινε φόρτωση της  τελευταίας γνωστής τοποθεσίας από μνήμη.</string>
+    <string name="using_cached_location">Χρήση  τοποθεσίας απο μνήμη</string>
+    <string name="using_cur_location">"Χρήση τρέχουσας τοποθεσίας "</string>
+    <string name="coordinates">Συντεταγμένες:</string>
+    <string name="last_update">Τελευταία ανανέωση:</string>
+    <string name="now">Τώρα</string>
 </resources>

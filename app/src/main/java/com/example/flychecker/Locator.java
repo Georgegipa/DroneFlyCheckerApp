@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.util.Log;
 
@@ -22,8 +23,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import Helpers.PreferencesHelpers;
 
+/**
+ * This class is used to get the location of the user.
+ * It gets gps coordinates using 3 different methods:
+ * 1. FusedLocationProviderClient
+ * 2. Using last known location from SharedPreferences
+ * 3. Using LocationManager to get the location
+ *
+ * If FusedLocationProviderClient has not been invoked from any other app then it fails.
+ * If cached location exists then it is used, else it gets the location from LocationManager.
+ */
 public class Locator {
     private static final String TAG = Locator.class.getSimpleName();
     private double latitude;
@@ -46,10 +56,12 @@ public class Locator {
     }
 
     //retrieve the location and city name from the shared preferences
-    public void retrieveLocation() {
+    private void retrieveLocation() {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("location", Context.MODE_PRIVATE);
-        latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
-        longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
+        //latitude and longitude cant be more than 90 and 200 respectively
+        //so if the location isn't found the false location will be checked
+        latitude = Double.parseDouble(sharedPreferences.getString("latitude", "200"));
+        longitude = Double.parseDouble(sharedPreferences.getString("longitude", "200"));
     }
 
     public static boolean locationExistsInCache(Context context) {
@@ -72,7 +84,7 @@ public class Locator {
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
-                return addresses.get(0).getLocality();
+                return addresses.get(0).getLocality() + ", " + countryCodeToEmoji(addresses.get(0).getCountryCode());
             }
         } catch (IOException e) {
             Log.d(TAG, "IOException: " + e.getMessage());
@@ -80,23 +92,43 @@ public class Locator {
         return "";
     }
 
+    private static String countryCodeToEmoji(String countryCode) {
+        int firstLetter = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+        int secondLetter = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        return new String(Character.toChars(firstLetter)) + new String(Character.toChars(secondLetter));
+    }
+
     public void updateGPS(OnSuccessListener<Location> locationListener) {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //permission granted
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(activity, location -> {
                 if (location != null) {
-                    //permission granted now get the location
-                    //getLocation(location);
+                    //gps is available
                     getLocation(location);
                     usingCachedLocation = false;
-                } else {
-                    //permission granted but no location yet
+                }
+                else {
+                    //fused location is unavailable so use the cached location
                     usingCachedLocation = true;
                     retrieveLocation();
                 }
                 locationListener.onSuccess(location);
             });
         }
+    }
+
+    public void getCurrentLocation(LocationListener ll)
+    {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, location -> {
+                if (location != null) {
+                    getLocation(location);
+                    ll.onLocationChanged(location);
+                }
+            });
+        }
+
     }
 
     public boolean isLocationEnabled() {

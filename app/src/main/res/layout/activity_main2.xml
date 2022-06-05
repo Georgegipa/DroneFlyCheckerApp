@@ -73,30 +73,26 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-
                         <TextView
+                            android:id="@+id/tv_data_source"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Currently using gps data!"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            app:drawableLeftCompat="@drawable/ic_baseline_memory_24" />
 
                         <TextView
+                            android:id="@+id/tv_coordinates"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="latitude: 12.32"
-                            android:textSize="14sp"/>
+                            android:textSize="16sp"
+                            app:drawableLeftCompat="@drawable/ic_mdi_map_marker" />
 
                         <TextView
+                            android:id="@+id/tv_last_updated"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="longtitute: 12.32"
-                            android:textSize="14sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Last updated: 12.32"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            app:drawableLeftCompat="@drawable/ic_baseline_update_24" />
 
 
                     </LinearLayout>

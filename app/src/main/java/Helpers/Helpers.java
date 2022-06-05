@@ -84,21 +84,29 @@ public abstract class Helpers {
 
     //check if unixtime is within the last hour
     public static boolean isLastHour(long unixtime) {
-        return unixtime > System.currentTimeMillis() / 1000 - 3600;
+        return unixtime > System.currentTimeMillis() / 1000 - 3600 && unixtime < System.currentTimeMillis() / 1000;
     }
 
     //convert unix timestamp to time with date
-    public static String convertUnixToDate(Context context, int unixTime) {
+    public static String convertUnixToDate(Context context, long unixTime) {
+        if(isLastHour(unixTime))
+            return context.getString(R.string.now);
         java.util.Date date = new java.util.Date(unixTime * 1000L);
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
         sdf.setTimeZone(java.util.TimeZone.getDefault());
-        String formattedDate = sdf.format(date).split(" ")[0];
-        String time = sdf.format(date).split(" ")[1];
+        return sdf.format(date) + " " + convertUnixToTime(context, unixTime);
+    }
+
+
+    public static String convertUnixToTime(Context context, long unixTime) {
+        java.util.Date date = new java.util.Date(unixTime * 1000L);
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm");
+        sdf.setTimeZone(java.util.TimeZone.getDefault());
+        String time="";
         if (!PreferencesHelpers.is24HourFormat(context)) {
-            formattedDate += " " + convertTo12h(context, time);
-        } else
-            formattedDate += " " + time;
-        return formattedDate;
+            time = convertTo12h(context, sdf.format(date));
+        }
+        return time;
     }
 
     //convert a 24hr time to 12hr time (12:00 -> 12:00 PM)
@@ -120,6 +128,7 @@ public abstract class Helpers {
         }
         return hour + ":" + timeSplit[1] + " " + amPm;
     }
+
 
     //change app language
     public static void setLocale(Context context) {

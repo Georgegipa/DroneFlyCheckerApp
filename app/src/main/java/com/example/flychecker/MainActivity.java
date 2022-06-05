@@ -1,6 +1,7 @@
 package com.example.flychecker;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -48,12 +49,14 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private WeatherAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView currentLocationTv,notificationBarTv;
+    private TextView currentLocationTv,notificationBarTv,dataSourceTv,lastUpdatedTv,coordinatesTv;
     private double latitude, longitude;
     private CardView topCv;
     private String city;
     private LinearLayout topLl;
     private String currentLanguage;
+    private long lastUpdated;
+    private boolean usingCachedLocation;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 longitude = loc.getLongitude();
                 city = Locator.locationToCityName(this, latitude, longitude);
                 currentLocationTv.setText(city);
-                if(loc.isUsingCachedLocation())//using cached location
+                usingCachedLocation = loc.isUsingCachedLocation();
+                if(usingCachedLocation)//using cached location
                     Snackbar.make(findViewById(R.id.main_view), R.string.location_from_cache, Snackbar.LENGTH_LONG).show();
             }
         }
@@ -126,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             city = Locator.locationToCityName(this, latitude, longitude);
             currentLanguage = PreferencesHelpers.getLanguage(this);
             currentLocationTv.setText(city);
+            updateCollapsable();
         }
     }
 
@@ -143,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.rv_list);
         topCv = findViewById(R.id.cv_top);
         topLl = findViewById(R.id.ll_top);
+        coordinatesTv = findViewById(R.id.tv_coordinates);
+        dataSourceTv = findViewById(R.id.tv_data_source);
+        lastUpdatedTv = findViewById(R.id.tv_last_updated);
         notificationBarTv = findViewById(R.id.tv_notification_bar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new WeatherAdapter(this, rawWeatherDataList,
@@ -176,6 +184,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    private void updateCollapsable()
+    {
+        //set the data source
+        if(usingCachedLocation) {
+            //set drawable
+            dataSourceTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_memory_24, 0, 0, 0);
+            dataSourceTv.setText(R.string.using_cached_location);
+        }
+        else {
+            dataSourceTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_gps_fixed_24, 0, 0, 0);
+            dataSourceTv.setText(R.string.using_cur_location);
+        }
+        lastUpdatedTv.setText(getString(R.string.last_update)+Helpers.convertUnixToTime(this,lastUpdated));
+        coordinatesTv.setText(getString(R.string.coordinates)+String.format(" %.4f , %.4f", latitude, longitude));
+    }
+
     //generate the api url based on the location
     @NonNull
     private String generateURL(String timezoneID, double latitude, double longitude) {
@@ -202,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     //make the api call and load the data
     private void getData() {
+        Context context = this;
         //get timezone from the device
         if (!isNetworkAvailable()) {
             //display a snackbar if there is no internet connection with a retry button
@@ -223,7 +249,9 @@ public class MainActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), getString(R.string.data_refreshed), Toast.LENGTH_SHORT).show();
                     notificationBar(getString(R.string.data_refreshed),getColor(R.color.green),3500);//similar to LONG_DELAY
                     swipeRefreshLayout.setRefreshing(false);
+                    lastUpdated = System.currentTimeMillis(); //get current time in unix time
                     adapter.refreshData(rawWeatherDataList);//update the adapter
+                    updateCollapsable();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

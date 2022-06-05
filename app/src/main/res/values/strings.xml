@@ -78,4 +78,9 @@
     <string name="wind_danger">Wind speeds are too high, avoid flying if possible.</string>
     <string name="weather_summary">Weather Summary</string>
     <string name="location_from_cache">Loading last known location from cache!</string>
+    <string name="using_cached_location">Using cached location</string>
+    <string name="using_cur_location">Using your current location</string>
+    <string name="last_update">Last Update:</string>
+    <string name="coordinates">Coordinates:</string>
+    <string name="now">Now</string>
 </resources>
