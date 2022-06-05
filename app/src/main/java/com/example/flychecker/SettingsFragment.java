@@ -10,6 +10,10 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreference;
 
+import java.util.Objects;
+
+import Helpers.*;
+
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
@@ -24,7 +28,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onResume() {
         super.onResume();
         //unregister the preferenceChange listener
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -35,38 +39,43 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         if (preference instanceof ListPreference) {
             //if it is listpreference cast preference to ListPreference
             ListPreference listPreference = (ListPreference) preference;
-            if (key.equals("pref_key_theme")) {
-                String theme = listPreference.getValue();
-                Helpers.setNewTheme(this.getActivity(), theme);
-            } else if (key.equals("pref_key_language")) {
-                String language = listPreference.getValue();
-                this.getActivity().recreate();//recreate the activity to change the language
-                PreferencesHelpers.setLanguage(this.getActivity(), language);
-                Helpers.setLocale(this.getActivity());
-            } else if (key.equals("pref_key_wind_unit")) {
-                String windUnit = listPreference.getValue();
+            switch (key) {
+                case "pref_key_theme":
+                    String theme = listPreference.getValue();
+                    Helpers.setNewTheme(this.requireActivity(), theme);
+                    break;
+                case "pref_key_language":
+                    String language = listPreference.getValue();
+                    this.requireActivity().recreate();//recreate the activity to change the language
 
-                PreferencesHelpers.setWindSpeedUnit(this.getActivity(), windUnit);
-
-            } else if (key.equals("pref_key_temperature_unit")) {
-                String tempUnit = listPreference.getValue();
-                PreferencesHelpers.setTemperatureUnit(this.getActivity(), tempUnit);
-            } else if (key.equals("pref_key_hour_format")) {
-                String hourFormat = listPreference.getValue();
-                PreferencesHelpers.setTimeFormat(this.getActivity(), hourFormat);
+                    PreferencesHelpers.setLanguage(this.requireActivity(), language);
+                    Helpers.setLocale(this.getActivity());
+                    break;
+                case "pref_key_wind_unit":
+                    String windUnit = listPreference.getValue();
+                    PreferencesHelpers.setWindSpeedUnit(this.requireActivity(), windUnit);
+                    break;
+                case "pref_key_temperature_unit":
+                    String tempUnit = listPreference.getValue();
+                    PreferencesHelpers.setTemperatureUnit(this.requireActivity(), tempUnit);
+                    break;
+                case "pref_key_hour_format":
+                    String hourFormat = listPreference.getValue();
+                    PreferencesHelpers.setTimeFormat(this.requireActivity(), hourFormat);
+                    break;
             }
 
         } else if (preference instanceof SwitchPreference) {
             if (key.equals("pref_key_waterproof")) {
                 boolean waterproof = sharedPreferences.getBoolean("pref_key_waterproof", false);
-                PreferencesHelpers.setDroneWaterproof(this.getActivity(), waterproof);
+                PreferencesHelpers.setDroneWaterproof(this.requireActivity(), waterproof);
             }
         } else if (preference instanceof SeekBarPreference) {
             if (key.equals("pref_key_max_speed")) {
                 int windSpeed = sharedPreferences.getInt("pref_key_max_speed", 15);
                 //TODO: fix min value on seekbar
                 if(windSpeed > 5)
-                    PreferencesHelpers.setMaxSpeed(this.getActivity(), windSpeed);
+                    PreferencesHelpers.setMaxSpeed(this.requireActivity(), windSpeed);
                 else
                     sharedPreferences.edit().putInt("pref_key_max_speed", 5).apply();
             }
@@ -77,6 +86,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onPause() {
         super.onPause();
         //unregister the preference change listener
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        Objects.requireNonNull(getPreferenceScreen().getSharedPreferences()).unregisterOnSharedPreferenceChangeListener(this);
     }
 }

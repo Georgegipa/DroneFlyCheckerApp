@@ -1,4 +1,4 @@
-package com.example.flychecker;
+package Models;
 
 public enum Status {
     SAFE,

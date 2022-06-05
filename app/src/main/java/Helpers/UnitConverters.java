@@ -1,4 +1,4 @@
-package com.example.flychecker;
+package Helpers;
 
 public abstract class UnitConverters {
 

@@ -1,18 +1,12 @@
 package com.example.flychecker;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +27,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -43,6 +35,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import Helpers.Helpers;
+import Models.LocationObj;
+import Models.RawWeatherData;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private double latitude, longitude;
     private CardView topCv;
     private String city;
-    private Locator locator;
     private LinearLayout topLl;
 
     @Override
@@ -101,26 +96,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Helpers.setLocale(this);
-        Helpers.setPrevTheme(this);
         setupGUI();
-        locator = new Locator(this);
-        if(!locator.isLocationEnabled() && !locator.prevLocationExists()) {
-            exitAlert("GPS disabled", "Please enable GPS to use this app.");
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.hasExtra("location") ) {
+                LocationObj loc = intent.getParcelableExtra("location");
+                latitude = loc.getLatitude();
+                longitude = loc.getLongitude();
+                city = loc.getCity();
+                currentLocationTv.setText(city);
+                if(loc.isUsingCachedLocation())//using cached location
+                    Snackbar.make(findViewById(R.id.main_view), R.string.location_from_cache, Snackbar.LENGTH_LONG).show();
+            }
         }
-        else {
-            locator.updateGPS(new OnSuccessListener<Location>() {
-                //wait for location
-                @Override
-                public void onSuccess(Location location) {
-                    //load data to class to avoid null values
-                    latitude = locator.getLatitude();
-                    longitude = locator.getLongitude();
-                    city = locator.getCity();
-                    getData();
-                }
-            });
-        }
+        getData();
     }
 
     @Override
@@ -133,22 +122,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    //this method is called when the user accepts or denies a permission
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        //the user has selected the location permission
-        if (requestCode == Locator.PERMISSION_FINE_LOCATION ) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //permission granted
-                recreate();//restart activity and trigger onCreate
-            } else {
-                //permission denied
-                exitAlert(getString(R.string.gps_permission_denied), getString(R.string.gps_permission_denied_message));
-            }
-        }
     }
 
     //gui functions
@@ -182,50 +155,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //show linearlayout when pressed
-        topCv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(topLl.getVisibility() == View.GONE) {
-                    topLl.setVisibility(View.VISIBLE);
-                }
-                else {
-                    topLl.setVisibility(View.GONE);
-                }
+        //TODO: add animation & data to show
+        topCv.setOnClickListener(v -> {
+            if(topLl.getVisibility() == View.GONE) {
+                topLl.setVisibility(View.VISIBLE);
+            }
+            else {
+                topLl.setVisibility(View.GONE);
             }
         });
-    }
-
-    private void updateUI()
-    {
-        Log.d(TAG, "updateUI: " + latitude + " " + longitude + " " + city);
-        //geocoder failed to find city
-        if (TextUtils.isEmpty(city)) {//check if city is empty or null
-            Snackbar.make(findViewById(R.id.main_view), "Unable to find locations city name", Snackbar.LENGTH_LONG).show();
-            topCv.setVisibility(View.GONE);//hide the top card view if the city name is not found
-        }
-        else {
-            topCv.setVisibility(View.VISIBLE);
-            currentLocationTv.setText(city);
-        }
-        if(locator.prevLocationLoaded())
-        {
-            Snackbar.make(findViewById(R.id.main_view), R.string.location_from_cache, Snackbar.LENGTH_LONG).show();
-        }
-    }
-
-    private void exitAlert(String title,String message)
-    {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                })
-                .create()
-                .show();
     }
 
     //generate the api url based on the location
@@ -258,17 +196,10 @@ public class MainActivity extends AppCompatActivity {
         if (!isNetworkAvailable()) {
             //display a snackbar if there is no internet connection with a retry button
             Snackbar.make(findViewById(R.id.main_view), getString(R.string.no_internet), Snackbar.LENGTH_LONG)
-                    .setAction("Retry", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getData();
-                        }
-                    }).show();
+                    .setAction("Retry", v -> getData()).show();
             return;
         }
         //TODO:configure cache
-        //TODO:configure timeouts
-        updateUI();
         String url = generateURL(java.util.TimeZone.getDefault().getID(), latitude, longitude);
         swipeRefreshLayout.setRefreshing(true);
         JsonObjectRequest weatherReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -295,12 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 //show a snackbar with a retry button if the request fails
                 Snackbar.make(findViewById(R.id.main_view), getString(R.string.request_failed), Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Retry", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                getData();
-                            }
-                        }).show();
+                        .setAction("Retry", v -> getData()).show();
             }
         });
         AppController.getInstance().addToRequestQueue(weatherReq);

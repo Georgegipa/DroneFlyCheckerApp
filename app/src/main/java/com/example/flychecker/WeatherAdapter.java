@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import Helpers.Helpers;
+import Models.RawWeatherData;
+import Models.Status;
+
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
 
 
@@ -63,10 +67,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView timeTv;
-        private ImageView statusIv;
-        private TextView statusTv;
-        private CardView statusCv;
+        private final TextView timeTv;
+        private final ImageView statusIv;
+        private final TextView statusTv;
+        private final CardView statusCv;
 
         //constructor
         public ViewHolder(@NonNull View view) {

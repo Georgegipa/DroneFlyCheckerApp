@@ -1,17 +1,20 @@
 package com.example.flychecker;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Models.RawWeatherData;
+import Models.Status;
+import Helpers.PreferencesHelpers;
+
 public class WeatherAnalyzer {
 
-    private RawWeatherData weather;
-    private int maxDroneSpeed;
-    private Context context;
+    private final RawWeatherData weather;
+    private final int maxDroneSpeed;
+    private final Context context;
 
     WeatherAnalyzer(Context context, RawWeatherData weather) {
         this.weather = weather;
@@ -94,7 +97,6 @@ public class WeatherAnalyzer {
                 return context.getString(R.string.thunderstorm);
 
         }
-        ;
         //51,56,61,66,71,80,85 is light
         //53,63,73,81 is moderate
         //55,57,65,67,75,82,86 is heavy
@@ -171,7 +173,7 @@ public class WeatherAnalyzer {
                 status[i] = Status.DANGER;
                 //drones can't fly faster than half of max speed when returning home automatically
                 //manual control may be needed
-            else if (windSpeed > maxDroneSpeed / 2)
+            else if (windSpeed > (double)maxDroneSpeed / 2)
                 status[i] = Status.CAUTION;
             else
                 status[i] = Status.SAFE;

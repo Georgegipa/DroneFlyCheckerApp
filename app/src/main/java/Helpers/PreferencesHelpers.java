@@ -1,15 +1,10 @@
-package com.example.flychecker;
+package Helpers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.text.format.DateFormat;
 
 import androidx.fragment.app.FragmentActivity;
-
-import java.util.Locale;
 
 public abstract class PreferencesHelpers {
 

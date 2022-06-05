@@ -14,7 +14,6 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -25,7 +24,6 @@ import java.util.Locale;
 
 public class Locator {
     private static final String TAG = Locator.class.getSimpleName();
-    public static final int PERMISSION_FINE_LOCATION = 99;
     private double latitude;
     private double longitude;
     private String city;
@@ -36,7 +34,6 @@ public class Locator {
     public Locator(Activity activity) {
         this.activity = activity;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.activity);
-
     }
 
 
@@ -50,11 +47,16 @@ public class Locator {
     }
 
     //retrieve the location and city name from the shared preferences
-    private void retrieveLocation() {
+    public void retrieveLocation() {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("location", Context.MODE_PRIVATE);
         latitude = Double.parseDouble(sharedPreferences.getString("latitude", "0"));
         longitude = Double.parseDouble(sharedPreferences.getString("longitude", "0"));
         city = sharedPreferences.getString("city", "");
+    }
+
+    public static boolean oldLocationExists(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("location", Context.MODE_PRIVATE);
+        return sharedPreferences.contains("latitude") && sharedPreferences.contains("longitude") && sharedPreferences.contains("city");
     }
 
     //helper function that parses gps location to lat and long and city name
@@ -78,25 +80,19 @@ public class Locator {
     public void updateGPS(OnSuccessListener<Location> locationListener) {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //permission granted
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(activity, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        //permission granted now get the location
-                        //getLocation(location);
-                        getLocation(location);
-                        usingCachedLocation = false;
-                    } else {
-                        //permission granted but no location yet
-                        usingCachedLocation = true;
-                        retrieveLocation();
-                    }
-                    locationListener.onSuccess(location);
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(activity, location -> {
+                if (location != null) {
+                    //permission granted now get the location
+                    //getLocation(location);
+                    getLocation(location);
+                    usingCachedLocation = false;
+                } else {
+                    //permission granted but no location yet
+                    usingCachedLocation = true;
+                    retrieveLocation();
                 }
+                locationListener.onSuccess(location);
             });
-        } else {
-            //permission not granted
-            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
         }
     }
 
@@ -105,12 +101,6 @@ public class Locator {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
                 LocationManager.NETWORK_PROVIDER
         );
-    }
-
-    public boolean prevLocationExists() {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences("location", Context.MODE_PRIVATE);
-        //check if shared preferences contains the location
-        return sharedPreferences.contains("latitude") && sharedPreferences.contains("longitude");
     }
 
     public boolean prevLocationLoaded() {

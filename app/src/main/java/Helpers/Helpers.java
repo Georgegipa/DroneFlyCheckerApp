@@ -1,4 +1,4 @@
-package com.example.flychecker;
+package Helpers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,11 @@ import android.content.res.Resources;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.example.flychecker.R;
+
 import java.util.Locale;
+
+import Models.Status;
 
 //Helper functions to avoid code repetition
 public abstract class Helpers {

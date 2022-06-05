@@ -1,4 +1,4 @@
-package com.example.flychecker;
+package Models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
