@@ -114,9 +114,21 @@ public abstract class PreferencesHelpers {
         return prefs.getInt("max_speed", 15);
     }
 
-    public static void setMaxSpeed(FragmentActivity activity, int windSpeed) {
-        SharedPreferences.Editor prefs = activity.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
+    public static void setMaxSpeed(Context context, int windSpeed) {
+        SharedPreferences.Editor prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
         prefs.putInt("max_speed", windSpeed);
         prefs.apply();
     }
+
+    public static void setGPSpref(Context context, boolean value) {
+        SharedPreferences.Editor prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
+        prefs.putBoolean("gps_pref", value);
+        prefs.apply();
+    }
+
+    public static boolean getGPSpref(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        return prefs.getBoolean("gps_pref", false);
+    }
+
 }

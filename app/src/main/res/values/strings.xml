@@ -14,7 +14,7 @@
     <string name="weather_api_title">Weather API</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
-    <string name="general">General</string>
+    <string name="app_settings">App Settings</string>
     <string name="theme">Theme</string>
     <string name="locale">Locale</string>
     <string name="switch_to_12h">Switch to 12h format</string>
@@ -56,7 +56,7 @@
     <string name="waterproof">Waterproof</string>
     <string name="request_failed">Request Failed</string>
     <string name="gps_permission_denied">GPS Permission denied</string>
-    <string name="gps_permission_denied_message">Please enabled location access and try again!</string>
+    <string name="gps_permission_denied_message">Please enable GPS and try again!</string>
     <string name="clear_sky">Clear sky</string>
     <string name="mainly_clear">Mainly clear</string>
     <string name="partly_cloudy">Partly cloudy</string>
@@ -86,4 +86,6 @@
     <string name="speed_to_low">Drone speed can\'t be lower than 3m/s!</string>
     <string name="retry">Retry</string>
     <string name="please_wait">Loading GPS position</string>
+    <string name="gps_pref_summary">This will affect battery life and boot times!</string>
+    <string name="gps_pref">Always load latest location</string>
 </resources>

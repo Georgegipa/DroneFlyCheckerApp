@@ -48,7 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 case "pref_key_language":
                     String language = listPreference.getValue();
                     this.requireActivity().recreate();//recreate the activity to change the language
-
                     PreferencesHelpers.setLanguage(this.requireActivity(), language);
                     Helpers.setLocale(this.getActivity());
                     break;
@@ -70,6 +69,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             if (key.equals("pref_key_waterproof")) {
                 boolean waterproof = sharedPreferences.getBoolean("pref_key_waterproof", false);
                 PreferencesHelpers.setDroneWaterproof(this.requireActivity(), waterproof);
+            }
+            else if (key.equals("pref_key_gps")) {
+                boolean gpsPref = sharedPreferences.getBoolean("pref_key_gps", false);
+                PreferencesHelpers.setGPSpref(this.requireActivity(), gpsPref);
             }
         } else if (preference instanceof SeekBarPreference) {
             if (key.equals("pref_key_max_speed")) {

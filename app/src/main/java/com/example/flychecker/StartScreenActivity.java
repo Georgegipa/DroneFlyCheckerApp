@@ -16,10 +16,10 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.Objects;
 
-import Helpers.Helpers;
+import Helpers.*;
 import Models.LocationObj;
 
-//this class shows the splash screen , it also manages the permissions and loads the shared preferences
+//this class shows the splash screen , it also manages the permissions and some of the shared preferences
 public class StartScreenActivity extends AppCompatActivity {
     private static final int build_version = android.os.Build.VERSION.SDK_INT;
     private static final int PERMISSION_FINE_LOCATION = 99;
@@ -45,27 +45,30 @@ public class StartScreenActivity extends AppCompatActivity {
 
     private void updateLoc() {
         Log.d("SplashScreenActivity", "updateLoc: " + times);
-        if(locator.isLocationEnabled() || Locator.locationExistsInCache(this)) {
+        if (locator.isLocationEnabled() || Locator.locationExistsInCache(this)) {
             //wait for location
-            locator.updateGPS(location -> {
-                //load data to class to avoid null values
-                double latitude = locator.getLatitude();
-                double longitude = locator.getLongitude();
-                Log.d("TAG", "onSuccess: " + latitude + " " + longitude + " " + locator.prevLocationLoaded());
-                if(latitude == 200 && longitude ==200)
-                    intentToMainActivity(null);
-                else {
-                    intentToMainActivity(new LocationObj(latitude, longitude, locator.prevLocationLoaded()));
-                }
-            });
-        }
-        else
-        {//user has not granted the permission to access the location
+            if (PreferencesHelpers.getGPSpref(this)) {//user prefers to use GPS instead of cache
+                locator.getCurrentLocation(location -> {
+                    intentToMainActivity(new LocationObj(location.getLatitude(), location.getLongitude(), false));
+                });
+            } else
+                locator.updateGPS(location -> {
+                    //load data to class to avoid null values
+                    double latitude = locator.getLatitude();
+                    double longitude = locator.getLongitude();
+                    Log.d("TAG", "onSuccess: " + latitude + " " + longitude + " " + locator.prevLocationLoaded());
+                    if (latitude == 200 && longitude == 200)
+                        intentToMainActivity(null);
+                    else {
+                        intentToMainActivity(new LocationObj(latitude, longitude, locator.prevLocationLoaded()));
+                    }
+                });
+        } else {//user has not granted the permission to access the location
             //however, gps is not enabled & no old location exists in shared preferences
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Location Services Not Enabled");
-            builder.setMessage("Press navigate to enable location services and restart app with location enabled"+
-                    "\n\n"+"Location is required only for the first time to get the current location");
+            builder.setMessage("Press navigate to enable location services and restart app with location enabled" +
+                    "\n\n" + "Location is required only for the first time to get the current location");
             builder.setPositiveButton("navigate", (dialog, which) -> {
                 //intent to location settings
                 Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -104,8 +107,7 @@ public class StartScreenActivity extends AppCompatActivity {
             times++;
             //if user has denied the permission twice in android 11 and above then
             // it's the same as if the user has permanently denied the permission
-            //if build version is greater than android 11 then show the rationale
-            if((build_version >= android.os.Build.VERSION_CODES.Q) && times == 2){
+            if ((build_version >= android.os.Build.VERSION_CODES.Q) && times == 2) {
                 displayManualPermit();
             }
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_FINE_LOCATION);
@@ -140,16 +142,13 @@ public class StartScreenActivity extends AppCompatActivity {
 
     private void intentToMainActivity(LocationObj locationObj) {
 
-        if(locationObj!= null) {
-
+        if (locationObj != null) {
             Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
             intent.putExtra("location", locationObj);
             startActivity(intent);
-        }
-        else
-        {
+        } else {
             //if the gps is not enabled exit the app
-            if(!locator.isLocationEnabled()){
+            if (!locator.isLocationEnabled()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Location is not enabled. Please enable location services and restart app with location enabled");
                 builder.setPositiveButton("ok", (dialog, which) -> {
@@ -157,20 +156,10 @@ public class StartScreenActivity extends AppCompatActivity {
                     finish();
                 });
             }
-            //if the none of the apps that use fused location have been used recently
-            // the app will fail to get the location
-            //In order to avoid this behavior we use location manager to get the current location
-            //location manager will get the current location and save it in shared preferences
-            //this will take a bit, so show a loading alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.loading_alert_dialog, null));
-            builder.setCancelable(true);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
+            /**if the none of the apps that use fused location have been used recently
+             the app will fail to get the location
+            In order to avoid this behavior use location manager to get the current location**/
             locator.getCurrentLocation(location -> {
-                dialog.dismiss();
                 Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
                 intent.putExtra("location", new LocationObj(location.getLatitude(), location.getLongitude(), false));
                 startActivity(intent);

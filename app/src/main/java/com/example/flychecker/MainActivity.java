@@ -1,7 +1,10 @@
 package com.example.flychecker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -91,6 +94,30 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        MenuItem gpsItem = menu.findItem(R.id.action_gps);
+        Locator locator = new Locator(this);
+        gpsItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Activity activity = MainActivity.this;
+                if(locator.isLocationEnabled()){
+                    locator.getCurrentLocation(new LocationListener() {
+                        @Override
+                        public void onLocationChanged(@NonNull Location location) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            city = Locator.locationToCityName(activity, latitude, longitude);
+                            getData();
+                        }
+                    });
+                }
+                else{
+                    Snackbar.make(topLl, R.string.gps_permission_denied_message, Snackbar.LENGTH_LONG).show();
+                }
+                return true;
+            }
+        });
         return true;
     }
 
@@ -146,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     //gui functions
     private void setupGUI()
     {
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
         //setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
         mRecyclerView = findViewById(R.id.rv_list);
