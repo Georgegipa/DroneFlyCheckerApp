@@ -47,11 +47,11 @@ public class StartScreenActivity extends AppCompatActivity {
         Log.d("SplashScreenActivity", "updateLoc: " + times);
         if (locator.isLocationEnabled() || Locator.locationExistsInCache(this)) {
             //wait for location
-            if (PreferencesHelpers.getGPSpref(this)) {//user prefers to use GPS instead of cache
+            if (PreferencesHelpers.getGPSpref(this) && locator.isLocationEnabled()) {//user prefers to use GPS instead of cache
                 locator.getCurrentLocation(location -> {
                     intentToMainActivity(new LocationObj(location.getLatitude(), location.getLongitude(), false));
                 });
-            } else
+            } else//used fused location provider or cache (if fused location provider is not available)
                 locator.updateGPS(location -> {
                     //load data to class to avoid null values
                     double latitude = locator.getLatitude();
