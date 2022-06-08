@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -128,6 +130,7 @@ public class Locator {
             builder.setView(inflater.inflate(R.layout.loading_alert_dialog, null));
             builder.setCancelable(true);
             AlertDialog dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
             LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, location -> {
