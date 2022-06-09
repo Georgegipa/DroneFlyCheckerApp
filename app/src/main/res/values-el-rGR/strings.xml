@@ -11,7 +11,6 @@
     <string name="about">Πληροφορίες</string>
     <string name="theme">Θέμα</string>
     <string name="locale">Τοπικές ρυθμίσεις</string>
-    <string name="switch_to_12h">Εναλλαγή στην 12ώρη μορφή</string>
     <string name="language">Γλώσσα</string>
     <string name="wind_unit">Μονάδα Ανέμου</string>
     <string name="temperature_unit">Μονάδα Θερμοκρασίας</string>
@@ -26,7 +25,6 @@
     <string name="safe">Ασφαλής</string>
     <string name="caution">Προσοχή</string>
     <string name="danger">Κίνδυνος</string>
-    <string name="safe_for_takeoff">Ασφαλής απογείωση;</string>
     <string name="hr12">12-ώρη μορφή</string>
     <string name="hr24">24-ώρη μορφή</string>
     <string name="time_format">Μορφή Ώρας</string>
@@ -48,10 +46,8 @@
     <string name="cloud_cover_danger">Kαιρός με συννεφιά μπορεί να επηρεάσει την κάλυψη σήματος και την ορατότητα.</string>
     <string name="gust_caution">Υψηλή ριπές αέρα μπορούν να επηρεάσουν αρνητικά  τον ομαλό απομακρυσμένο έλεγχο του drone.</string>
     <string name="gust_danger">Οι τρέχουσες ριπές ανέμου μπορεί να επιβραδύνουν την ταχύτητα του drone και να έχουν σοβαρό αντίκτυπο στη διάρκεια ζωής της μπαταρίας του.</string>
-    <string name="waterproof">Αδιάβροχο</string>
     <string name="no_internet">Δεν υπάρχει σύνδεση</string>
     <string name="request_failed">Το αίτημα απέτυχε</string>
-    <string name="gps_permission_denied">Απορρίφθηκε πρόσβαση στο GPS</string>
     <string name="gps_permission_denied_message">Ενεργοποιήστε την πρόσβαση τοποθεσίας και δοκιμάστε ξανά!</string>
     <string name="mainly_clear">Καθαρός ουρανός</string>
     <string name="partly_cloudy">Μερικώς συννεφιασμένος</string>

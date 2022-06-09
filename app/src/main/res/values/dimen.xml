@@ -2,5 +2,4 @@
 <resources>
     <dimen name="summary_text_size">18sp</dimen>
     <dimen name="category_text_size">23sp</dimen>
-    <dimen name="spacing_left_right">10dp</dimen>
 </resources>

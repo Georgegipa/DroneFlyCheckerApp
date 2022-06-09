@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">FlyChecker</string>
-    <string name="safe_for_takeoff">Safe for takeoff?</string>
     <string name="app_description">An app designed to check if the current weather is suitable for UAV takeoff.</string>
     <string name="app_author">George Papageorgiou</string>
-    <string name="app_author_email" translatable="false">ice18390180@uniwa.gr</string>
     <string name="app_author_website" translatable="false"><a href="https://github.com/Georgegipa">Github.com</a></string>
     <string name="weather_api"><a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a></string>
     <string name="icons_by"><a href="https://materialdesignicons.com/">Icons provided by MaterialDesignIcons</a></string>
@@ -17,7 +15,6 @@
     <string name="app_settings">App Settings</string>
     <string name="theme">Theme</string>
     <string name="locale">Locale</string>
-    <string name="switch_to_12h">Switch to 12h format</string>
     <string name="language">Language</string>
     <string name="wind_unit">Wind Unit</string>
     <string name="temperature_unit">Temperature Unit</string>
@@ -53,9 +50,7 @@
     <string name="cloud_cover_danger">Cloudy weather may impact signal coverage and visibility.</string>
     <string name="gust_caution">High wind gusts detected!Drone control may be impacted negatively.</string>
     <string name="gust_danger">Current wind gusts may slow down drone speed and have a drastic impact on battery life.</string>
-    <string name="waterproof">Waterproof</string>
     <string name="request_failed">Request Failed</string>
-    <string name="gps_permission_denied">GPS Permission denied</string>
     <string name="gps_permission_denied_message">Please enable GPS and try again!</string>
     <string name="clear_sky">Clear sky</string>
     <string name="mainly_clear">Mainly clear</string>

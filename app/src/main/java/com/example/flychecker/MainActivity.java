@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app_bar_menu, menu);
+        Helpers.setLocale(this);
         //add about menu item
         MenuItem about = menu.findItem(R.id.action_about);
         //change to about activity
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                             city = Locator.locationToCityName(activity, latitude, longitude);
+                            Log.d(TAG, "onLocationChanged: " + city);
                             getData();
                         }
                     });
@@ -207,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //show linearlayout when pressed
-        //TODO: add animation & data to show
         topCv.setOnClickListener(v -> {
             if (topLl.getVisibility() == View.GONE) {
                 topLl.setVisibility(View.VISIBLE);

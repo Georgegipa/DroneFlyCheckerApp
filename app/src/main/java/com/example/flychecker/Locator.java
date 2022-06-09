@@ -88,7 +88,6 @@ public class Locator {
         //use geocoder to get the city name
         //convert string to Locale
         Geocoder geocoder = new Geocoder(act,new Locale(PreferencesHelpers.getLanguage(act)));
-        Log.d("--Locale",PreferencesHelpers.getLanguage(act));
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
@@ -136,6 +135,7 @@ public class Locator {
             AlertDialog dialog = builder.create();
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
+            dialog.setCanceledOnTouchOutside(false);
             LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, location -> {
                 if (location != null) {
