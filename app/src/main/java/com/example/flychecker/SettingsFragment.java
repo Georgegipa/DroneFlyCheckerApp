@@ -66,11 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
             }
 
         } else if (preference instanceof SwitchPreference) {
-            if (key.equals("pref_key_waterproof")) {
-                boolean waterproof = sharedPreferences.getBoolean("pref_key_waterproof", false);
-                PreferencesHelpers.setDroneWaterproof(this.requireActivity(), waterproof);
-            }
-            else if (key.equals("pref_key_gps")) {
+           if (key.equals("pref_key_gps")) {
                 boolean gpsPref = sharedPreferences.getBoolean("pref_key_gps", false);
                 PreferencesHelpers.setGPSpref(this.requireActivity(), gpsPref);
             }

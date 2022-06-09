@@ -77,13 +77,6 @@
             android:textStyle="bold"
             android:title="@string/set_max_drone_speed" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:icon="@drawable/ic_mdi_water_check"
-            android:key="pref_key_waterproof"
-            android:title="@string/waterproof" />
-
-
     </PreferenceCategory>
 
 </PreferenceScreen>

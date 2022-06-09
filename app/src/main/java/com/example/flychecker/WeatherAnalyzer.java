@@ -25,14 +25,6 @@ public class WeatherAnalyzer {
 
     public Status checkWeatherCode() {
         int wCode = weather.getWeathercode();
-        boolean waterproof = PreferencesHelpers.getDroneWaterproof(context);
-        //51,53, 55,61,66,71,56 (light rain snow and drizzle)
-        if (waterproof &&
-                (wCode == 51 || wCode == 53 || wCode == 55
-                        || wCode == 61 || wCode == 66 || wCode == 71 || wCode == 56))
-            return Status.CAUTION;
-
-
         if (wCode <= 3)
             return Status.SAFE;
         else if (wCode == 45)
@@ -204,7 +196,6 @@ public class WeatherAnalyzer {
         }
     }
 
-    //TODO: check for drone water resistance
     public Status checkPrecipitation() {
         double precip = weather.getPrecipitation();
         Status status;

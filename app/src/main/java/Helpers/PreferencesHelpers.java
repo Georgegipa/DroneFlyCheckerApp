@@ -98,17 +98,6 @@ public abstract class PreferencesHelpers {
         prefs.apply();
     }
 
-    public static boolean getDroneWaterproof(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
-        return prefs.getBoolean("drone_waterproof", false);
-    }
-
-    public static void setDroneWaterproof(Context context, boolean isWaterproof) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit();
-        prefs.putBoolean("drone_waterproof", isWaterproof);
-        prefs.apply();
-    }
-
     public static int getMaxSpeed(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
         return prefs.getInt("max_speed", 15);
