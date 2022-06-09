@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private WeatherAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView currentLocationTv,notificationBarTv,dataSourceTv,lastRefreshTv,coordinatesTv;
+    private TextView currentLocationTv, notificationBarTv, dataSourceTv, lastRefreshTv, coordinatesTv;
     private double latitude, longitude;
     private CardView topCv;
     private String city;
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Activity activity = MainActivity.this;
-                if(locator.isLocationEnabled()){
+                if (locator.isLocationEnabled()) {
                     locator.getCurrentLocation(new LocationListener() {
                         @Override
                         public void onLocationChanged(@NonNull Location location) {
@@ -111,8 +111,7 @@ public class MainActivity extends AppCompatActivity {
                             getData();
                         }
                     });
-                }
-                else{
+                } else {
                     Snackbar.make(topLl, R.string.gps_permission_denied_message, Snackbar.LENGTH_LONG).show();
                 }
                 return true;
@@ -124,22 +123,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Helpers.setLocale(this);
         setupGUI();
         //get the current language
         currentLanguage = PreferencesHelpers.getLanguage(this);
+
         Intent intent = getIntent();
-        if (intent != null) {
-            if (intent.hasExtra("location") ) {
-                LocationObj loc = intent.getParcelableExtra("location");
-                latitude = loc.getLatitude();
-                longitude = loc.getLongitude();
-                city = Locator.locationToCityName(this, latitude, longitude);
-                currentLocationTv.setText(city);
-                usingCachedLocation = loc.isUsingCachedLocation();
-                if(usingCachedLocation)//using cached location
-                    Snackbar.make(findViewById(R.id.main_view), R.string.location_from_cache, Snackbar.LENGTH_LONG).show();
-            }
+        if (intent != null && intent.hasExtra("location")) {
+            LocationObj loc = intent.getParcelableExtra("location");
+            latitude = loc.getLatitude();
+            longitude = loc.getLongitude();
+            city = Locator.locationToCityName(this, latitude, longitude);
+            currentLocationTv.setText(city);
+            usingCachedLocation = loc.isUsingCachedLocation();
+            if (usingCachedLocation)//using cached location
+                Snackbar.make(findViewById(R.id.main_view), R.string.location_from_cache, Snackbar.LENGTH_LONG).show();
+
         }
         getData();
     }
@@ -149,10 +147,15 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         //refresh adapter data to change language inside the recycler view
         adapter.refreshData(rawWeatherDataList);
+        //refresh toolbar language
+        invalidateOptionsMenu();
         updateCollapsable();
         //check if language has changed
-        if(!currentLanguage.equals(PreferencesHelpers.getLanguage(this))) {
+        Log.d(TAG, "Current language: " + PreferencesHelpers.getLanguage(this)+" Last language: "+currentLanguage);
+        if (!currentLanguage.equals(PreferencesHelpers.getLanguage(this))) {
+            Log.d(TAG, "Language has changed");
             city = Locator.locationToCityName(this, latitude, longitude);
+            Log.d(TAG, "City: " + city);
             currentLanguage = PreferencesHelpers.getLanguage(this);
             currentLocationTv.setText(city);
         }
@@ -171,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //gui functions
-    private void setupGUI()
-    {
+    private void setupGUI() {
         setContentView(R.layout.activity_main);
         //setTitle(getString(R.string.safe_for_takeoff));
         currentLocationTv = findViewById(R.id.tv_current_location);
@@ -182,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         coordinatesTv = findViewById(R.id.tv_coordinates);
         dataSourceTv = findViewById(R.id.tv_data_source);
         lastRefreshTv = findViewById(R.id.tv_last_refresh);
-        lastRefreshTv.setText(getString(R.string.last_update) + "-" );
+        lastRefreshTv.setText(getString(R.string.last_update) + "-");
         notificationBarTv = findViewById(R.id.tv_notification_bar);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new WeatherAdapter(this, rawWeatherDataList,
@@ -207,25 +209,22 @@ public class MainActivity extends AppCompatActivity {
         //show linearlayout when pressed
         //TODO: add animation & data to show
         topCv.setOnClickListener(v -> {
-            if(topLl.getVisibility() == View.GONE) {
+            if (topLl.getVisibility() == View.GONE) {
                 topLl.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 topLl.setVisibility(View.GONE);
             }
         });
     }
 
-    private void updateCollapsable()
-    {
-        if(lastRefreshTime!=0)
-            lastRefreshTv.setText(getString(R.string.last_update)  + Helpers.convertUnixToTime(this,lastRefreshTime));
-        if(usingCachedLocation) {
+    private void updateCollapsable() {
+        if (lastRefreshTime != 0)
+            lastRefreshTv.setText(getString(R.string.last_update) + Helpers.convertUnixToTime(this, lastRefreshTime));
+        if (usingCachedLocation) {
             //set drawable
             dataSourceTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_memory_24, 0, 0, 0);
             dataSourceTv.setText(R.string.using_cached_location);
-        }
-        else {
+        } else {
             dataSourceTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_baseline_gps_fixed_24, 0, 0, 0);
             dataSourceTv.setText(R.string.using_cur_location);
         }
@@ -276,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = response.getJSONObject("hourly");
                     parseJSONHourly(jsonObject);
                     //create a toasts to show that the data is loaded
-                    notificationBar(getString(R.string.data_refreshed),getColor(R.color.green),3500);//similar to LONG_DELAY
+                    notificationBar(getString(R.string.data_refreshed), getColor(R.color.green), 3500);//similar to LONG_DELAY
                     swipeRefreshLayout.setRefreshing(false);
                     lastRefreshTime = System.currentTimeMillis();
                     updateCollapsable();
@@ -335,8 +334,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //show the notification bar for 5 seconds and then hide it
-    private void notificationBar(String text, int color,int delay)
-    {
+    private void notificationBar(String text, int color, int delay) {
         notificationBarTv.setVisibility(View.VISIBLE);
         notificationBarTv.setBackgroundColor(color);
         notificationBarTv.setText(text);

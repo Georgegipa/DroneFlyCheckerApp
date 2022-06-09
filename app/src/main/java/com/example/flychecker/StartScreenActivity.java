@@ -33,6 +33,7 @@ public class StartScreenActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         //hide the action bar
         Helpers.setPrevTheme(this);
+        Helpers.setLocale(this);
         locator = new Locator(this);
         //check if the user has granted the permission to access the location
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

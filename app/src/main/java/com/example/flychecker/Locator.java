@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.preference.Preference;
 import android.util.Log;
 import android.view.LayoutInflater;
 
@@ -26,6 +27,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import Helpers.*;
 
 
 /**
@@ -83,8 +86,9 @@ public class Locator {
     public static String locationToCityName(Activity act,double latitude,double longitude)
     {
         //use geocoder to get the city name
-        Geocoder geocoder = new Geocoder(act, Locale.getDefault());
-        Log.d("Locale", Locale.getDefault().toString());
+        //convert string to Locale
+        Geocoder geocoder = new Geocoder(act,new Locale(PreferencesHelpers.getLanguage(act)));
+        Log.d("--Locale",PreferencesHelpers.getLanguage(act));
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
