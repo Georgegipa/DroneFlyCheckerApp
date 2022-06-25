@@ -7,14 +7,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import java.util.Objects;
+import androidx.core.splashscreen.SplashScreen;
 
 import Helpers.*;
 import Models.LocationObj;
@@ -29,10 +26,15 @@ public class StartScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //avoid double splash screen in android 12+
         if (build_version >= 12) {
-            //change theme
             setTheme(R.style.Theme_FlyChecker);
         }
+        //prevent the activity from displaying and instead show the splash screen using SplashScreen
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        // Keep the splash screen visible for this Activity
+        splashScreen.setKeepOnScreenCondition(() -> true );
+
         locator = new Locator(this);
         //check if the user has granted the permission to access the location
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
