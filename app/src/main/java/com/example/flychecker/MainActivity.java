@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app_bar_menu, menu);
-        Helpers.setLocale(this);
         //add about menu item
         MenuItem about = menu.findItem(R.id.action_about);
         //change to about activity
@@ -131,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Helpers.setLocale(this);
         setupGUI();
         //get the current language
         currentLanguage = PreferencesHelpers.getLanguage(this);
