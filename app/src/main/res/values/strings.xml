@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">FlyChecker</string>
     <string name="app_description">An app designed to check if the current weather is suitable for UAV takeoff.</string>
     <string name="app_author">George Papageorgiou</string>
-    <string name="app_author_website" translatable="false"><a href="https://github.com/Georgegipa">Github.com</a></string>
+    <string name="app_author_website" translatable="false"><a href="https://github.com/Georgegipa/DroneFlyCheckerApp">Github.com</a></string>
     <string name="weather_api"><a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a></string>
     <string name="icons_by"><a href="https://materialdesignicons.com/">Icons provided by MaterialDesignIcons</a></string>
     <string name="version">Version</string>

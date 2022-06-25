@@ -127,20 +127,10 @@ public class Locator {
     public void getCurrentLocation(LocationListener ll)
     {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //this will take a bit, so show a loading alert dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            LayoutInflater inflater = activity.getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.loading_alert_dialog, null));
-            builder.setCancelable(true);
-            AlertDialog dialog = builder.create();
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.show();
-            dialog.setCanceledOnTouchOutside(false);
             LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, location -> {
                 if (location != null) {
                     getLocation(location);
-                    dialog.dismiss();
                     ll.onLocationChanged(location);
                 }
             });

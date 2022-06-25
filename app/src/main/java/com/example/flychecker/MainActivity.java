@@ -1,8 +1,11 @@
 package com.example.flychecker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.net.ConnectivityManager;
@@ -10,6 +13,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -77,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
         //add settings menu item
         MenuItem settings = menu.findItem(R.id.action_settings);
-        //change to settings activity
+
         settings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(MenuItem item) {//change to settings activity
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 return true;
             }
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //add gps button
         MenuItem gpsItem = menu.findItem(R.id.action_gps);
         Locator locator = new Locator(this);
         gpsItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 Activity activity = MainActivity.this;
                 if (locator.isLocationEnabled()) {
+                    swipeRefreshLayout.setRefreshing(true);
                     locator.getCurrentLocation(new LocationListener() {
                         @Override
                         public void onLocationChanged(@NonNull Location location) {
