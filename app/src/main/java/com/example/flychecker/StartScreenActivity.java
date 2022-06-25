@@ -29,11 +29,10 @@ public class StartScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
-        Objects.requireNonNull(getSupportActionBar()).hide();
-        //hide the action bar
-        Helpers.setPrevTheme(this);
-        Helpers.setLocale(this);
+        if (build_version >= 12) {
+            //change theme
+            setTheme(R.style.Theme_FlyChecker);
+        }
         locator = new Locator(this);
         //check if the user has granted the permission to access the location
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
