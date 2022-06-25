@@ -266,7 +266,6 @@ public class MainActivity extends AppCompatActivity {
                     .setAction(R.string.retry, v -> getData()).show();
             return;
         }
-        //TODO:configure cache
         String url = generateURL(java.util.TimeZone.getDefault().getID(), latitude, longitude);
         swipeRefreshLayout.setRefreshing(true);
         JsonObjectRequest weatherReq = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
