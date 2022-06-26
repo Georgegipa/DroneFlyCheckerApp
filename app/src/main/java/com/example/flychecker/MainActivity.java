@@ -109,16 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 Activity activity = MainActivity.this;
                 if (locator.isLocationEnabled()) {
                     swipeRefreshLayout.setRefreshing(true);
-//                    locator.updateGPS(new OnSuccessListener<Location>() {
-//                        @Override
-//                        public void onSuccess(Location location) {
-//                            latitude = location.getLatitude();
-//                            longitude = location.getLongitude();
-//                            city = Locator.locationToCityName(activity, latitude, longitude);
-//                            Log.d(TAG, "onLocationChanged: " + city);
-//                            getData();
-//                        }
-//                    });
                     locator.getCurrentLocation(new LocationListener() {
                         @Override
                         public void onLocationChanged(@NonNull Location location) {
@@ -141,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Helpers.setLocale(this);
         setupGUI();
         //get the current language
         currentLanguage = PreferencesHelpers.getLanguage(this);

@@ -1,5 +1,5 @@
 # DroneFlyCheckerApp
-A simple android app that checks the current weather and forms a list if the weather is suitable for take off
+A simple android app that checks the current weather and forms a list off the weather safety (for drone take off).
 # Features
 - Support for 3 types of weather safety: safe, warning, danger
     - Tap each element for more information
@@ -8,10 +8,13 @@ A simple android app that checks the current weather and forms a list if the wea
 - Dynamic gps location (load the current location from google services, from gps or from the cache)
 
 # Technologies Used
+- Splash Screen
 - SharedPreferences
 - Bi-lingual support (English and Greek)
 - Google Fused Location API
 - Google Geocoding API 
 - LocationManager
+### UI
 - RecyclerView
 - SettingsFragment
+- Swipe to refresh
