@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.splashscreen.SplashScreen;
 
-import Helpers.*;
 import Models.LocationObj;
 
 //this class shows the splash screen , it also manages the permissions and some of the shared preferences
@@ -49,17 +49,29 @@ public class StartScreenActivity extends AppCompatActivity {
         Log.d("SplashScreenActivity", "updateLoc: " + times);
         if (locator.isLocationEnabled() || Locator.locationExistsInCache(this)) {
             //used fused location provider or cache (if fused location provider is not available)
-            locator.updateGPS(location -> {
-                //load data to class to avoid null values
-                double latitude = locator.getLatitude();
-                double longitude = locator.getLongitude();
-                Log.d("TAG", "onSuccess: " + latitude + " " + longitude + " " + locator.prevLocationLoaded());
-                if (latitude == 200 && longitude == 200)
-                    intentToMainActivity(null);
-                else {
-                    intentToMainActivity(new LocationObj(latitude, longitude, locator.prevLocationLoaded()));
+            int delay = 0;
+            if(!Locator.locationExistsInCache(this)){
+                delay = 2000;
+            }
+            //if fused location provider is not available, delay for 2 seconds before getting the location
+            //first time wait for the location to be retrieved
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    locator.updateGPS(location -> {
+                        //load data to class to avoid null values
+                        double latitude = locator.getLatitude();
+                        double longitude = locator.getLongitude();
+                        Log.d("TAG", "onSuccess: " + latitude + " " + longitude + " " + locator.prevLocationLoaded());
+                        if (latitude == 200 && longitude == 200)
+                            intentToMainActivity(null);
+                        else {
+                            intentToMainActivity(new LocationObj(latitude, longitude, locator.prevLocationLoaded()));
+                        }
+                    });
                 }
-            });
+            }, delay);
+
         } else {//user has not granted the permission to access the location
             //however, gps is not enabled & no old location exists in shared preferences
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

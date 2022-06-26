@@ -121,14 +121,6 @@ public class Locator {
 
     public void updateGPS(OnSuccessListener<Location> locationListener) {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            if(!Locator.locationExistsInCache(activity))
-            {//first time wait for the location to be retrieved
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             //permission granted
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(activity, location -> {
                 if (location != null) {
