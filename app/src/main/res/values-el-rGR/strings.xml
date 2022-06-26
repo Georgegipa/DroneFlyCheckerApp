@@ -78,4 +78,5 @@
     <string name="speed_to_low">Η ταχύτητα drone δεν μπορεί να είναι χαμηλότερη από 3m/s!</string>
     <string name="retry">Προσπαθήστε ξανά</string>
     <string name="app_settings">Ρυθμίσεις Εφαρμογής</string>
+    <string name="please_wait">Εύρεση της τοποθεσίας σας.</string>
 </resources>

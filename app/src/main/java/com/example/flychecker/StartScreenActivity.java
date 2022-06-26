@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.splashscreen.SplashScreen;
 
+import Helpers.Helpers;
 import Models.LocationObj;
 
 //this class shows the splash screen , it also manages the permissions and some of the shared preferences
@@ -26,8 +27,8 @@ public class StartScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         //avoid double splash screen in android 12+
+        super.onCreate(savedInstanceState);
         if (build_version >= 31) {
             setTheme(R.style.Theme_FlyChecker);
             //prevent the activity from displaying and instead show the splash screen using SplashScreen
@@ -35,6 +36,8 @@ public class StartScreenActivity extends AppCompatActivity {
             // Keep the splash screen visible for this Activity
             splashScreen.setKeepOnScreenCondition(() -> true);
         }
+        Helpers.setLocale(this);
+        Helpers.setPrevTheme(this);
         locator = new Locator(this);
         //check if the user has granted the permission to access the location
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

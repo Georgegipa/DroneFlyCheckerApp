@@ -80,4 +80,5 @@
     <string name="now">Now</string>
     <string name="speed_to_low">Drone speed can\'t be lower than 3m/s!</string>
     <string name="retry">Retry</string>
+    <string name="please_wait">Getting your current location.</string>
 </resources>

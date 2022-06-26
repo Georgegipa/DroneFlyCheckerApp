@@ -137,6 +137,33 @@ public class Locator {
         }
     }
 
+    public void getCurrentLocation(LocationListener ll)
+    {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //this will take a bit, so show a loading alert dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity,AlertDialog.THEME_DEVICE_DEFAULT_DARK);
+            LayoutInflater inflater = activity.getLayoutInflater();
+            //set inflater theme to dark mode
+            builder.setView(inflater.inflate(R.layout.loading_alert_dialog, null));
+            builder.setCancelable(true);
+            AlertDialog dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+            dialog.setCanceledOnTouchOutside(false);
+            LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, location -> {
+                if (location != null) {
+                    getLocation(location);
+                    dialog.dismiss();
+                    ll.onLocationChanged(location);
+                }
+            });
+        }
+
+    }
+
+
+
     public boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
