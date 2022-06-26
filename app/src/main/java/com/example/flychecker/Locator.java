@@ -33,13 +33,13 @@ import Helpers.*;
 
 /**
  * This class is used to get the location of the user.
- * It gets gps coordinates using 3 different methods:
+ * It gets gps coordinates using 2 different methods:
  * 1. FusedLocationProviderClient
  * 2. Using last known location from SharedPreferences
- * 3. Using LocationManager to get the location
- *
+ * <p>
  * If FusedLocationProviderClient has not been invoked from any other app then it fails.
- * If cached location exists then it is used, else it gets the location from LocationManager.
+ * So to avoid this, delay for 2 seconds before getting the location for the first boot only.
+ * Then get the location from SharedPreferences if FusedLocationProviderClient is not available.
  */
 public class Locator {
     private static final String TAG = Locator.class.getSimpleName();
@@ -83,20 +83,34 @@ public class Locator {
         saveLocation();
     }
 
-    public static String locationToCityName(Activity act,double latitude,double longitude)
-    {
+    public static String locationToCityName(Activity act, double latitude, double longitude) {
         //use geocoder to get the city name
         //convert string to Locale
-        Geocoder geocoder = new Geocoder(act,new Locale(PreferencesHelpers.getLanguage(act)));
+        String cityName="";
+        //get the name of the location in english first to avoid blank city name
+        Geocoder geocoder = new Geocoder(act, new Locale("en"));
         try {
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-                return addresses.get(0).getLocality() + ", " + countryCodeToEmoji(addresses.get(0).getCountryCode());
+            cityName = getLocationName(geocoder.getFromLocation(latitude, longitude, 1));
+
+            //now check if any other language is selected
+            //if the city name can be translated to the selected language then use it
+            //else use the english name
+            if(!PreferencesHelpers.getLanguage(act).equals("en")) {
+                //geocoder = new Geocoder(act, new Locale("en"));
+                geocoder = new Geocoder(act, new Locale(PreferencesHelpers.getLanguage(act)));
+                String temp =  getLocationName(geocoder.getFromLocation(latitude, longitude, 1));
+                if(temp != null) {
+                    cityName = temp;
+                }
             }
         } catch (IOException e) {
             Log.d(TAG, "IOException: " + e.getMessage());
         }
-        return "";
+        return cityName;
+    }
+
+    private static String getLocationName(List<Address> addresses) {
+        return addresses.size() > 0 ? addresses.get(0).getLocality() + ", " + countryCodeToEmoji(addresses.get(0).getCountryCode()) : null;
     }
 
     private static String countryCodeToEmoji(String countryCode) {
@@ -113,8 +127,7 @@ public class Locator {
                     //gps is available
                     getLocation(location);
                     usingCachedLocation = false;
-                }
-                else {
+                } else {
                     //fused location is unavailable so use the cached location
                     usingCachedLocation = true;
                     retrieveLocation();
@@ -122,20 +135,6 @@ public class Locator {
                 locationListener.onSuccess(location);
             });
         }
-    }
-
-    public void getCurrentLocation(LocationListener ll)
-    {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, location -> {
-                if (location != null) {
-                    getLocation(location);
-                    ll.onLocationChanged(location);
-                }
-            });
-        }
-
     }
 
     public boolean isLocationEnabled() {

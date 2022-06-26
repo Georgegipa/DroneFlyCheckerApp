@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlyChecker">
         <activity android:name=".StartScreenActivity"
-            android:launchMode="singleTask"
+            android:theme="@style/SplashTheme"
             android:exported="true"
             android:noHistory="true">
             <intent-filter>

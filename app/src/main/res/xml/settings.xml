@@ -12,14 +12,6 @@
             android:summary="%s"
             android:title="@string/theme" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:icon="@drawable/ic_baseline_gps_fixed_24"
-            android:key="pref_key_gps"
-            android:title="@string/gps_pref"
-            android:summary="@string/gps_pref_summary"/>
-
-
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/locale" android:icon="@drawable/ic_mdi_web">
 
