@@ -65,11 +65,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     break;
             }
 
-        } else if (preference instanceof SwitchPreference) {
-           if (key.equals("pref_key_gps")) {
-                boolean gpsPref = sharedPreferences.getBoolean("pref_key_gps", false);
-                PreferencesHelpers.setGPSpref(this.requireActivity(), gpsPref);
-            }
         } else if (preference instanceof SeekBarPreference) {
             if (key.equals("pref_key_max_speed")) {
                 int windSpeed = sharedPreferences.getInt("pref_key_max_speed", 15);

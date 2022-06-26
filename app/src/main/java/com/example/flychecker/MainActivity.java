@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -108,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
                 Activity activity = MainActivity.this;
                 if (locator.isLocationEnabled()) {
                     swipeRefreshLayout.setRefreshing(true);
-                    locator.getCurrentLocation(new LocationListener() {
+                    locator.updateGPS(new OnSuccessListener<Location>() {
                         @Override
-                        public void onLocationChanged(@NonNull Location location) {
+                        public void onSuccess(Location location) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                             city = Locator.locationToCityName(activity, latitude, longitude);
@@ -351,5 +352,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }, delay);
     }
-
 }

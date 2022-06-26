@@ -78,6 +78,4 @@
     <string name="speed_to_low">Η ταχύτητα drone δεν μπορεί να είναι χαμηλότερη από 3m/s!</string>
     <string name="retry">Προσπαθήστε ξανά</string>
     <string name="app_settings">Ρυθμίσεις Εφαρμογής</string>
-    <string name="gps_pref_summary">Αυτό θα επηρεάσει τη διάρκεια ζωής της μπαταρίας και τους χρόνους εκκίνησης!</string>
-    <string name="gps_pref">Φόρτωση πάντα της πιο πρόσφατης τοποθεσίας</string>
 </resources>

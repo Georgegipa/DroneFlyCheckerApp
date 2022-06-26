@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +33,7 @@ public class StartScreenActivity extends AppCompatActivity {
             //prevent the activity from displaying and instead show the splash screen using SplashScreen
             SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
             // Keep the splash screen visible for this Activity
-            splashScreen.setKeepOnScreenCondition(() -> true );
+            splashScreen.setKeepOnScreenCondition(() -> true);
         }
         locator = new Locator(this);
         //check if the user has granted the permission to access the location
@@ -47,23 +48,18 @@ public class StartScreenActivity extends AppCompatActivity {
     private void updateLoc() {
         Log.d("SplashScreenActivity", "updateLoc: " + times);
         if (locator.isLocationEnabled() || Locator.locationExistsInCache(this)) {
-            //wait for location
-            if (PreferencesHelpers.getGPSpref(this) && locator.isLocationEnabled()) {//user prefers to use GPS instead of cache
-                locator.getCurrentLocation(location -> {
-                    intentToMainActivity(new LocationObj(location.getLatitude(), location.getLongitude(), false));
-                });
-            } else//used fused location provider or cache (if fused location provider is not available)
-                locator.updateGPS(location -> {
-                    //load data to class to avoid null values
-                    double latitude = locator.getLatitude();
-                    double longitude = locator.getLongitude();
-                    Log.d("TAG", "onSuccess: " + latitude + " " + longitude + " " + locator.prevLocationLoaded());
-                    if (latitude == 200 && longitude == 200)
-                        intentToMainActivity(null);
-                    else {
-                        intentToMainActivity(new LocationObj(latitude, longitude, locator.prevLocationLoaded()));
-                    }
-                });
+            //used fused location provider or cache (if fused location provider is not available)
+            locator.updateGPS(location -> {
+                //load data to class to avoid null values
+                double latitude = locator.getLatitude();
+                double longitude = locator.getLongitude();
+                Log.d("TAG", "onSuccess: " + latitude + " " + longitude + " " + locator.prevLocationLoaded());
+                if (latitude == 200 && longitude == 200)
+                    intentToMainActivity(null);
+                else {
+                    intentToMainActivity(new LocationObj(latitude, longitude, locator.prevLocationLoaded()));
+                }
+            });
         } else {//user has not granted the permission to access the location
             //however, gps is not enabled & no old location exists in shared preferences
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -144,6 +140,7 @@ public class StartScreenActivity extends AppCompatActivity {
     private void intentToMainActivity(LocationObj locationObj) {
 
         if (locationObj != null) {
+            Log.d("SplashScreenActivity", "intentToMainActivity: " + locationObj.getLatitude() + " " + locationObj.getLongitude());
             Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
             intent.putExtra("location", locationObj);
             startActivity(intent);
@@ -157,14 +154,7 @@ public class StartScreenActivity extends AppCompatActivity {
                     finish();
                 });
             }
-            /**if the none of the apps that use fused location have been used recently
-             the app will fail to get the location
-            In order to avoid this behavior use location manager to get the current location**/
-            locator.getCurrentLocation(location -> {
-                Intent intent = new Intent(StartScreenActivity.this, MainActivity.class);
-                intent.putExtra("location", new LocationObj(location.getLatitude(), location.getLongitude(), false));
-                startActivity(intent);
-            });
+
         }
     }
 }

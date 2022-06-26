@@ -33,13 +33,13 @@ import Helpers.*;
 
 /**
  * This class is used to get the location of the user.
- * It gets gps coordinates using 3 different methods:
+ * It gets gps coordinates using 2 different methods:
  * 1. FusedLocationProviderClient
  * 2. Using last known location from SharedPreferences
- * 3. Using LocationManager to get the location
  * <p>
  * If FusedLocationProviderClient has not been invoked from any other app then it fails.
- * If cached location exists then it is used, else it gets the location from LocationManager.
+ * So to avoid this, delay for 2 seconds before getting the location for the first boot only.
+ * Then get the location from SharedPreferences if FusedLocationProviderClient is not available.
  */
 public class Locator {
     private static final String TAG = Locator.class.getSimpleName();
@@ -121,6 +121,14 @@ public class Locator {
 
     public void updateGPS(OnSuccessListener<Location> locationListener) {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if(!Locator.locationExistsInCache(activity))
+            {//first time wait for the location to be retrieved
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             //permission granted
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(activity, location -> {
                 if (location != null) {
@@ -135,19 +143,6 @@ public class Locator {
                 locationListener.onSuccess(location);
             });
         }
-    }
-
-    public void getCurrentLocation(LocationListener ll) {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, location -> {
-                if (location != null) {
-                    getLocation(location);
-                    ll.onLocationChanged(location);
-                }
-            });
-        }
-
     }
 
     public boolean isLocationEnabled() {
