@@ -332,8 +332,8 @@ public class MainActivity extends AppCompatActivity {
             rawWeatherData.setWindSpeed80m(Double.parseDouble(windspeed_80mJsonArray.getString(i)));
             rawWeatherData.setWindSpeed120m(Double.parseDouble(windspeed_120mJsonArray.getString(i)));
             rawWeatherData.setPrecipitation(Double.parseDouble(precipitationJsonArray.getString(i)));
-            rawWeatherData.setWeathercode(Integer.parseInt(weathercodeJsonArray.getString(i)));
-            rawWeatherData.setCloudcover(Integer.parseInt(cloudcoverJsonArray.getString(i)));
+            rawWeatherData.setWeathercode((int)Double.parseDouble(weathercodeJsonArray.getString(i)));
+            rawWeatherData.setCloudcover((int)Double.parseDouble(cloudcoverJsonArray.getString(i)));
             rawWeatherData.setGust(Double.parseDouble(windgustsJsonArray.getString(i)));
             rawWeatherData.setHumidity(Double.parseDouble(humidityJsonArray.getString(i)));
             rawWeatherDataList.add(rawWeatherData);
